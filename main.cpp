@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
 	eventThread.launch();
 
 	// init player sprite
-	g.player.init(sf::milliseconds(75));
+	g.player.init(sf::milliseconds(10), 5);
 
 	g.player.setPosition(
 			sf::VideoMode::getDesktopMode().width / 2 - 100,
