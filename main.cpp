@@ -51,9 +51,10 @@ int main(int argc, char** argv) {
 	eventThread.launch();
 
 	// init player sprite
-	g.player.setFrameTime(sf::milliseconds(50));
+	g.player.setFrameTime(sf::milliseconds(75));
 	g.player.setAnimation(g.playerRight);
 	g.player.stop();
+	g.player.setScale(0.5, 0.5);
 
 	// main loop
 	while (window.isOpen()) {

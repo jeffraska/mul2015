@@ -33,6 +33,8 @@ public:
 	Animation();
 
 	void addFrame(sf::IntRect rect);
+	void addXFrames(sf::IntRect rect, int count);
+	void addYFrames(sf::IntRect rect, int count);
 	void setSpriteSheet(const sf::Texture& texture);
 	const sf::Texture* getSpriteSheet() const;
 	std::size_t getSize() const;

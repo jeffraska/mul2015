@@ -32,6 +32,7 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>LICENSE</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -51,6 +52,8 @@
           <commandLine>-lsfml-graphics -lsfml-window -lsfml-system</commandLine>
         </linkerTool>
       </compileType>
+      <item path="LICENSE" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/AnimatedSprite.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/Animation.hpp" ex="false" tool="3" flavor2="0">
@@ -88,6 +91,8 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="LICENSE" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/AnimatedSprite.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/Animation.hpp" ex="false" tool="3" flavor2="0">
