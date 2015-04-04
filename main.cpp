@@ -54,7 +54,6 @@ int main(int argc, char** argv) {
 	g.player.setFrameTime(sf::milliseconds(50));
 	g.player.setAnimation(g.playerRight);
 	g.player.stop();
-	g.player.setScale(4, 4);
 
 	// main loop
 	while (window.isOpen()) {

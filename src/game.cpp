@@ -29,12 +29,26 @@ game::game() {
 
 	// prepare right player animation
 	playerRight.setSpriteSheet(textures.at("player.png"));
-	playerRight.addFrame(sf::IntRect(0, 64, 32, 32));
-	playerRight.addFrame(sf::IntRect(32, 64, 32, 32));
-	playerRight.addFrame(sf::IntRect(64, 64, 32, 32));
+	playerRight.addFrame(sf::IntRect(0, 0, 300, 240));
+	playerRight.addFrame(sf::IntRect(300, 0, 300, 240));
+	playerRight.addFrame(sf::IntRect(600, 0, 300, 240));
+	playerRight.addFrame(sf::IntRect(900, 0, 300, 240));
+	playerRight.addFrame(sf::IntRect(1200, 0, 300, 240));
+	playerRight.addFrame(sf::IntRect(1500, 0, 300, 240));
+	playerRight.addFrame(sf::IntRect(1800, 0, 300, 240));
+	playerRight.addFrame(sf::IntRect(2100, 0, 300, 240));
+	playerRight.addFrame(sf::IntRect(2400, 0, 300, 240));
+	playerRight.addFrame(sf::IntRect(2700, 0, 300, 240));
 
 	playerLeft.setSpriteSheet(textures.at("player.png"));
-	playerLeft.addFrame(sf::IntRect(0, 32, 32, 32));
-	playerLeft.addFrame(sf::IntRect(32, 32, 32, 32));
-	playerLeft.addFrame(sf::IntRect(64, 32, 32, 32));
+	playerLeft.addFrame(sf::IntRect(0, 240, 300, 240));
+	playerLeft.addFrame(sf::IntRect(300, 240, 300, 240));
+	playerLeft.addFrame(sf::IntRect(600, 240, 300, 240));
+	playerLeft.addFrame(sf::IntRect(900, 240, 300, 240));
+	playerLeft.addFrame(sf::IntRect(1200, 240, 300, 240));
+	playerLeft.addFrame(sf::IntRect(1500, 240, 300, 240));
+	playerLeft.addFrame(sf::IntRect(1800, 240, 300, 240));
+	playerLeft.addFrame(sf::IntRect(2100, 240, 300, 240));
+	playerLeft.addFrame(sf::IntRect(2400, 240, 300, 240));
+	playerLeft.addFrame(sf::IntRect(2700, 240, 300, 240));
 }
