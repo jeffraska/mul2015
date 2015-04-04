@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>include/AnimatedSprite.hpp</itemPath>
       <itemPath>include/Animation.hpp</itemPath>
+      <itemPath>include/character.h</itemPath>
       <itemPath>include/game.h</itemPath>
       <itemPath>main.h</itemPath>
     </logicalFolder>
@@ -18,6 +19,7 @@
                    projectFiles="true">
       <itemPath>src/AnimatedSprite.cpp</itemPath>
       <itemPath>src/Animation.cpp</itemPath>
+      <itemPath>src/character.cpp</itemPath>
       <itemPath>src/game.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
@@ -58,6 +60,8 @@
       </item>
       <item path="include/Animation.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/character.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/game.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
@@ -67,6 +71,8 @@
       <item path="src/AnimatedSprite.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/Animation.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/character.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/game.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -97,6 +103,8 @@
       </item>
       <item path="include/Animation.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/character.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/game.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
@@ -106,6 +114,8 @@
       <item path="src/AnimatedSprite.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/Animation.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/character.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/game.cpp" ex="false" tool="1" flavor2="0">
       </item>

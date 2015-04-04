@@ -2,6 +2,7 @@
 #include <map>
 #include <SFML/Graphics.hpp>
 #include "AnimatedSprite.hpp"
+#include "character.h"
 
 #ifndef GAME_H
 #define	GAME_H
@@ -17,9 +18,7 @@ public:
 	}
 
 	map<string, sf::Texture> textures;
-	Animation playerRight;
-	Animation playerLeft;
-	AnimatedSprite player;
+	character player;
 private:
 	game();
 	game(game const&);

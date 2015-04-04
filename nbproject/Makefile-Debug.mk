@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/src/AnimatedSprite.o \
 	${OBJECTDIR}/src/Animation.o \
+	${OBJECTDIR}/src/character.o \
 	${OBJECTDIR}/src/game.o
 
 
@@ -79,6 +80,11 @@ ${OBJECTDIR}/src/Animation.o: src/Animation.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Animation.o src/Animation.cpp
+
+${OBJECTDIR}/src/character.o: src/character.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/character.o src/character.cpp
 
 ${OBJECTDIR}/src/game.o: src/game.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src

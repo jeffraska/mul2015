@@ -28,10 +28,52 @@ game::game() {
 	}
 	closedir(dp);
 
-	// prepare right player animation
-	playerRight.setSpriteSheet(textures.at("player.png"));
-	playerRight.addXFrames(sf::IntRect(0, 0, 300, 240), 10);
+	// prepare player animation
+	player.setTexture(
+			character::tCharacterWalk,
+			character::dRight,
+			textures.at("player.png"),
+			sf::IntRect(0, 0, 200, 250),
+			10
+			);
 
-	playerLeft.setSpriteSheet(textures.at("player.png"));
-	playerLeft.addXFrames(sf::IntRect(0, 240, 300, 240), 10);
+	player.setTexture(
+			character::tCharacterWalk,
+			character::dLeft,
+			textures.at("player.png"),
+			sf::IntRect(0, 250, 200, 250),
+			10
+			);
+
+	player.setTexture(
+			character::tGunWalk,
+			character::dRight,
+			textures.at("machinegun.png"),
+			sf::IntRect(0, 0, 200, 100),
+			10
+			);
+
+	player.setTexture(
+			character::tGunWalk,
+			character::dLeft,
+			textures.at("machinegun.png"),
+			sf::IntRect(0, 100, 200, 100),
+			10
+			);
+
+	player.setTexture(
+			character::tGunFire,
+			character::dRight,
+			textures.at("machinegun.png"),
+			sf::IntRect(0, 200, 200, 100),
+			10
+			);
+
+	player.setTexture(
+			character::tGunFire,
+			character::dLeft,
+			textures.at("machinegun.png"),
+			sf::IntRect(0, 300, 200, 100),
+			10
+			);
 }
