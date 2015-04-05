@@ -8,10 +8,10 @@
 sf::Mutex windowMutex;
 sf::RenderWindow window;
 
-sf::SoundBuffer shot;
-sf::SoundBuffer step;
 sf::Sound shotSound;
 sf::Sound stepSound;
+sf::Sound explosionSound;
+sf::Sound gunloadSound;
 
 #endif	/* MAIN_H */
 

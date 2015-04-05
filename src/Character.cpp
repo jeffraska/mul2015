@@ -3,11 +3,10 @@
 #include <cmath>
 
 Character::Character() {
-
+	refreshRate = sf::milliseconds(75);
 }
 
 void Character::init(sf::Time frameTime, float speed) {
-	sf::Time refreshRate = sf::milliseconds(75);
 	direction = dRight;
 	wStatus = wStop;
 	fStatus = fHold;
@@ -43,6 +42,25 @@ void Character::setTexture(
 
 	anim->setSpriteSheet(texture);
 	anim->addXFrames(rect, count);
+}
+
+void Character::setWeapon(Weapon w) {
+	weapon = w;
+	weapon.sprite.setFrameTime(refreshRate);
+	setPosition(getPosition());
+
+	if (wStatus == wWalk) {
+		wStatus = wStop;
+		go(direction);
+	} else {
+		stop();
+	}
+
+	if (fStatus == fFire) {
+		fire();
+	} else {
+		holdFire();
+	}
 }
 
 void Character::go(Direction d) {

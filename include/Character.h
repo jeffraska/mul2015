@@ -64,6 +64,7 @@ private:
 	sf::Time m_frameTime;
 	sf::Time m_currentTime;
 	float characterSpeed;
+	sf::Time refreshRate;
 };
 
 #endif	/* CHARACTER_H */

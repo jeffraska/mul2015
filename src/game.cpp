@@ -63,7 +63,10 @@ void game::init() {
 			10
 			);
 
-	player.weapon = machinegun;
+	weapons.insert(std::pair<string, Weapon>("machinegun", machinegun));
+	weapons.insert(std::pair<string, Weapon>("laser", laser));
+
+	player.weapon = weapons["machinegun"];
 }
 
 map<string, string> game::getFiles(string dir, string filetype) {

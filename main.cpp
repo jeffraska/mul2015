@@ -39,13 +39,38 @@ void eventHandler() {
 						shotSound.setLoop(true);
 						shotSound.play();
 					}
+					if (event.key.code == sf::Keyboard::Space) {
+						explosionSound.play();
+					}
+					if (event.key.code == sf::Keyboard::F1) {
+						g.player.setWeapon(g.weapons["machinegun"]);
+						gunloadSound.play();
+						if (shotSound.getStatus() == sf::Sound::Playing) {
+							shotSound.setBuffer(g.sounds[g.player.weapon.name]);
+							shotSound.play();
+						} else {
+							shotSound.setBuffer(g.sounds[g.player.weapon.name]);
+						}
+					}
+					if (event.key.code == sf::Keyboard::F2) {
+						g.player.setWeapon(g.weapons["laser"]);
+						gunloadSound.play();
+						if (shotSound.getStatus() == sf::Sound::Playing) {
+							shotSound.setBuffer(g.sounds[g.player.weapon.name]);
+							shotSound.play();
+						} else {
+							shotSound.setBuffer(g.sounds[g.player.weapon.name]);
+						}
+					}
 					break;
 				case sf::Event::KeyReleased:
-					if (event.key.code == sf::Keyboard::Right) {
+					if (event.key.code == sf::Keyboard::Right &&
+							g.player.getDirection() == Character::dRight) {
 						g.player.stop();
 						stepSound.setLoop(false);
 					}
-					if (event.key.code == sf::Keyboard::Left) {
+					if (event.key.code == sf::Keyboard::Left &&
+							g.player.getDirection() == Character::dLeft) {
 						g.player.stop();
 						stepSound.setLoop(false);
 					}
@@ -79,10 +104,13 @@ int main(int argc, char** argv) {
 			sf::VideoMode::getDesktopMode().height / 2 - 125
 			);
 
+	// prepare sounds
 	shotSound.setBuffer(g.sounds[g.player.weapon.name]);
-	shotSound.setPitch(0.9);
 	shotSound.setVolume(50);
 	stepSound.setBuffer(g.sounds["step"]);
+	explosionSound.setBuffer(g.sounds["explosion"]);
+	gunloadSound.setBuffer(g.sounds["gunload"]);
+	gunloadSound.setVolume(50);
 
 	// play background sounds
 	g.music.at("horor")->play();
