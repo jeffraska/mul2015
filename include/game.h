@@ -1,8 +1,9 @@
 #include <list>
 #include <map>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "AnimatedSprite.hpp"
-#include "character.h"
+#include "Character.h"
 
 #ifndef GAME_H
 #define	GAME_H
@@ -14,16 +15,30 @@ public:
 
 	static game& getInstance() {
 		static game instance;
+		static bool initialized;
+		if (!initialized) {
+			initialized = true;
+			instance.init();
+		}
 		return instance;
 	}
 
 	map<string, sf::Texture> textures;
-	character player;
+	map<string, sf::SoundBuffer> sounds;
+	map<string, sf::Music*> music;
+	Character player;
+	map<string, Weapon> weapons;
 private:
 	game();
+	~game();
 	game(game const&);
 	void operator=(game const&);
-	static const char *textureDir;
+
+	map<string, string> getFiles(string dir, string filetype);
+	void loadTextures();
+	void loadSounds();
+	void loadMusic();
+	void init();
 };
 
 #endif	/* GAME_H */

@@ -1,34 +1,33 @@
-#include "character.h"
+#include "Character.h"
 #include <iostream>
+#include <cmath>
 
-sf::Vector2f gunOffset(40, 100);
-
-character::character() {
+Character::Character() {
 
 }
 
-void character::init(sf::Time frameTime, float speed) {
+void Character::init(sf::Time frameTime, float speed) {
+	sf::Time refreshRate = sf::milliseconds(75);
 	direction = dRight;
 	wStatus = wStop;
 	fStatus = fHold;
 
-	sprite.setFrameTime(sf::milliseconds(75));
+	sprite.setFrameTime(refreshRate);
 	sprite.setAnimation(rightWalk);
 	sprite.stop();
 	sprite.setLooped(true);
 
-	gun.setFrameTime(sf::milliseconds(75));
-	gun.setAnimation(gunRightWalk);
-	gun.stop();
-	gun.setLooped(true);
-
-	gun.setPosition(gunOffset);
+	weapon.sprite.setFrameTime(refreshRate);
+	weapon.sprite.setAnimation(weapon.gunRightWalk);
+	weapon.sprite.stop();
+	weapon.sprite.setLooped(true);
+	weapon.sprite.setPosition(weapon.weaponOffset);
 
 	m_frameTime = frameTime;
 	characterSpeed = speed;
 }
 
-void character::setTexture(
+void Character::setTexture(
 		TextureType type,
 		Direction dir,
 		const sf::Texture& texture,
@@ -40,31 +39,21 @@ void character::setTexture(
 			anim = &rightWalk;
 		else
 			anim = &leftWalk;
-	} else if (type == tGunWalk) {
-		if (dir == dRight)
-			anim = &gunRightWalk;
-		else
-			anim = &gunLeftWalk;
-	} else if (type == tGunFire) {
-		if (dir == dRight)
-			anim = &gunRightFire;
-		else
-			anim = &gunLeftFire;
 	}
 
 	anim->setSpriteSheet(texture);
 	anim->addXFrames(rect, count);
 }
 
-void character::go(Direction d) {
+void Character::go(Direction d) {
 	if (d != direction || wStatus == wStop) {
 		direction = d;
 		wStatus = wWalk;
 
 		if (direction == dRight) {
-			gun.setPosition(position.x + gunOffset.x, position.y + gunOffset.y);
+			weapon.sprite.setPosition(position.x + weapon.weaponOffset.x, position.y + weapon.weaponOffset.y);
 		} else {
-			gun.setPosition(position.x - gunOffset.x, position.y + gunOffset.y);
+			weapon.sprite.setPosition(position.x - weapon.weaponOffset.x, position.y + weapon.weaponOffset.y);
 		}
 
 		sprite.stop();
@@ -83,7 +72,7 @@ void character::go(Direction d) {
 	}
 }
 
-void character::stop() {
+void Character::stop() {
 	sprite.pause();
 	wStatus = wStop;
 
@@ -91,57 +80,57 @@ void character::stop() {
 		holdFire();
 }
 
-void character::fire() {
+void Character::fire() {
 	fStatus = fFire;
 
 	if (direction == dRight)
-		gun.play(gunRightFire);
+		weapon.sprite.play(weapon.gunRightFire);
 	else
-		gun.play(gunLeftFire);
+		weapon.sprite.play(weapon.gunLeftFire);
 }
 
-void character::holdFire() {
+void Character::holdFire() {
 	fStatus = fHold;
 
 	if (direction == dRight)
-		gun.play(gunRightWalk);
+		weapon.sprite.play(weapon.gunRightWalk);
 	else
-		gun.play(gunLeftWalk);
+		weapon.sprite.play(weapon.gunLeftWalk);
 
 	if (wStatus == wStop) {
-		gun.pause();
+		weapon.sprite.pause();
 	}
 }
 
-void character::setPosition(float x, float y) {
+void Character::setPosition(float x, float y) {
 	position = sf::Vector2f(x, y);
 	sprite.setPosition(position);
 
 	sprite.setPosition(x, y);
 	if (direction == dRight) {
-		gun.setPosition(x + gunOffset.x, y + gunOffset.y);
+		weapon.sprite.setPosition(x + weapon.weaponOffset.x, y + weapon.weaponOffset.y);
 	} else {
-		gun.setPosition(x - gunOffset.x, y + gunOffset.y);
+		weapon.sprite.setPosition(x - weapon.weaponOffset.x, y + weapon.weaponOffset.y);
 	}
 }
 
-void character::setPosition(const sf::Vector2f& pos) {
+void Character::setPosition(const sf::Vector2f& pos) {
 	position = pos;
 	sprite.setPosition(position);
 
 	sprite.setPosition(pos.x, pos.y);
 	if (direction == dRight) {
-		gun.setPosition(pos.x + gunOffset.x, pos.y + gunOffset.y);
+		weapon.sprite.setPosition(pos.x + weapon.weaponOffset.x, pos.y + weapon.weaponOffset.y);
 	} else {
-		gun.setPosition(pos.x - gunOffset.x, pos.y + gunOffset.y);
+		weapon.sprite.setPosition(pos.x - weapon.weaponOffset.x, pos.y + weapon.weaponOffset.y);
 	}
 }
 
-sf::Vector2f character::getPosition() {
+sf::Vector2f Character::getPosition() {
 	return position;
 }
 
-void character::animate(sf::Time deltaTime) {
+void Character::animate(sf::Time deltaTime) {
 	if (wStatus == wWalk) {
 		m_currentTime += deltaTime;
 		if (m_currentTime >= m_frameTime) {
@@ -155,5 +144,5 @@ void character::animate(sf::Time deltaTime) {
 	}
 
 	sprite.update(deltaTime);
-	gun.update(deltaTime);
+	weapon.sprite.update(deltaTime);
 }

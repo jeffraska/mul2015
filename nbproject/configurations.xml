@@ -6,7 +6,8 @@
                    projectFiles="true">
       <itemPath>include/AnimatedSprite.hpp</itemPath>
       <itemPath>include/Animation.hpp</itemPath>
-      <itemPath>include/character.h</itemPath>
+      <itemPath>include/Character.h</itemPath>
+      <itemPath>include/Weapon.h</itemPath>
       <itemPath>include/game.h</itemPath>
       <itemPath>main.h</itemPath>
     </logicalFolder>
@@ -19,7 +20,8 @@
                    projectFiles="true">
       <itemPath>src/AnimatedSprite.cpp</itemPath>
       <itemPath>src/Animation.cpp</itemPath>
-      <itemPath>src/character.cpp</itemPath>
+      <itemPath>src/Character.cpp</itemPath>
+      <itemPath>src/Weapon.cpp</itemPath>
       <itemPath>src/game.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
@@ -51,7 +53,7 @@
           </incDir>
         </ccTool>
         <linkerTool>
-          <commandLine>-lsfml-graphics -lsfml-window -lsfml-system</commandLine>
+          <commandLine>-lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio</commandLine>
         </linkerTool>
       </compileType>
       <item path="LICENSE" ex="false" tool="3" flavor2="0">
@@ -60,7 +62,9 @@
       </item>
       <item path="include/Animation.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/character.h" ex="false" tool="3" flavor2="0">
+      <item path="include/Character.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Weapon.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/game.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -72,7 +76,9 @@
       </item>
       <item path="src/Animation.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/character.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Character.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Weapon.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/game.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -103,7 +109,9 @@
       </item>
       <item path="include/Animation.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/character.h" ex="false" tool="3" flavor2="0">
+      <item path="include/Character.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Weapon.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/game.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -115,7 +123,9 @@
       </item>
       <item path="src/Animation.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/character.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Character.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Weapon.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/game.cpp" ex="false" tool="1" flavor2="0">
       </item>

@@ -1,15 +1,16 @@
 #include "AnimatedSprite.hpp"
+#include "Weapon.h"
 
 #ifndef CHARACTER_H
 #define	CHARACTER_H
 
-class character {
+class Character {
 public:
 
 	enum TextureType {
 		tCharacterWalk,
-		tGunWalk,
-		tGunFire
+		/*tGunWalk,
+		tGunFire*/
 	};
 
 	enum Direction {
@@ -27,11 +28,15 @@ public:
 		fFire
 	};
 
-	character();
+	Character();
 	void init(sf::Time frameTime = sf::seconds(0.2f), float speed = 15);
 	void setTexture(TextureType, Direction, const sf::Texture& texture, sf::IntRect, int);
 	void go(Direction);
 	void stop();
+
+	void setWeapon(Weapon);
+
+
 	void fire();
 	void holdFire();
 	void setPosition(float x, float y);
@@ -45,14 +50,10 @@ public:
 	};
 
 	AnimatedSprite sprite;
-	AnimatedSprite gun;
+	Weapon weapon;
 private:
 	Animation rightWalk;
 	Animation leftWalk;
-	Animation gunRightWalk;
-	Animation gunLeftWalk;
-	Animation gunRightFire;
-	Animation gunLeftFire;
 
 	Direction direction;
 	WalkStatus wStatus;

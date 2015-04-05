@@ -25,22 +25,34 @@ void eventHandler() {
 					break;
 				case sf::Event::KeyPressed:
 					if (event.key.code == sf::Keyboard::Right) {
-						g.player.go(character::dRight);
+						g.player.go(Character::dRight);
+						stepSound.setLoop(true);
+						stepSound.play();
 					}
 					if (event.key.code == sf::Keyboard::Left) {
-						g.player.go(character::dLeft);
+						g.player.go(Character::dLeft);
+						stepSound.setLoop(true);
+						stepSound.play();
 					}
 					if (event.key.code == sf::Keyboard::LControl) {
 						g.player.fire();
+						shotSound.setLoop(true);
+						shotSound.play();
 					}
 					break;
 				case sf::Event::KeyReleased:
-					if (event.key.code == sf::Keyboard::Right)
+					if (event.key.code == sf::Keyboard::Right) {
 						g.player.stop();
-					if (event.key.code == sf::Keyboard::Left)
+						stepSound.setLoop(false);
+					}
+					if (event.key.code == sf::Keyboard::Left) {
 						g.player.stop();
-					if (event.key.code == sf::Keyboard::LControl)
+						stepSound.setLoop(false);
+					}
+					if (event.key.code == sf::Keyboard::LControl) {
 						g.player.holdFire();
+						shotSound.setLoop(false);
+					}
 					break;
 			}
 		}
@@ -67,6 +79,15 @@ int main(int argc, char** argv) {
 			sf::VideoMode::getDesktopMode().height / 2 - 125
 			);
 
+	shotSound.setBuffer(g.sounds[g.player.weapon.name]);
+	shotSound.setPitch(0.9);
+	shotSound.setVolume(50);
+	stepSound.setBuffer(g.sounds["step"]);
+
+	// play background sounds
+	g.music.at("horor")->play();
+	g.music.at("drums")->play();
+
 	// main loop
 	while (window.isOpen()) {
 		sf::Time frameTime = frameClock.restart();
@@ -77,11 +98,11 @@ int main(int argc, char** argv) {
 		// draw
 		window.clear(sf::Color::White);
 
-		if (g.player.getDirection() == character::dRight) {
+		if (g.player.getDirection() == Character::dRight) {
 			window.draw(g.player.sprite);
-			window.draw(g.player.gun);
+			window.draw(g.player.weapon.sprite);
 		} else {
-			window.draw(g.player.gun);
+			window.draw(g.player.weapon.sprite);
 			window.draw(g.player.sprite);
 		}
 		window.display();

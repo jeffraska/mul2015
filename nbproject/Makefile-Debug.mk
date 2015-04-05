@@ -38,7 +38,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/src/AnimatedSprite.o \
 	${OBJECTDIR}/src/Animation.o \
-	${OBJECTDIR}/src/character.o \
+	${OBJECTDIR}/src/Character.o \
+	${OBJECTDIR}/src/Weapon.o \
 	${OBJECTDIR}/src/game.o
 
 
@@ -64,7 +65,7 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mul: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mul ${OBJECTFILES} ${LDLIBSOPTIONS} -lsfml-graphics -lsfml-window -lsfml-system
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/mul ${OBJECTFILES} ${LDLIBSOPTIONS} -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -81,10 +82,15 @@ ${OBJECTDIR}/src/Animation.o: src/Animation.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Animation.o src/Animation.cpp
 
-${OBJECTDIR}/src/character.o: src/character.cpp 
+${OBJECTDIR}/src/Character.o: src/Character.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/character.o src/character.cpp
+	$(COMPILE.cc) -g -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Character.o src/Character.cpp
+
+${OBJECTDIR}/src/Weapon.o: src/Weapon.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Weapon.o src/Weapon.cpp
 
 ${OBJECTDIR}/src/game.o: src/game.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
