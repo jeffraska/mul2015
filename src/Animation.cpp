@@ -24,7 +24,6 @@
 #include "Animation.hpp"
 
 Animation::Animation() : m_texture(NULL) {
-
 }
 
 void Animation::addFrame(sf::IntRect rect) {
@@ -38,9 +37,8 @@ void Animation::addXFrames(sf::IntRect rect, int count) {
 }
 
 void Animation::addYFrames(sf::IntRect rect, int count) {
-	for (uint i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++) {
 		addFrame(sf::IntRect(rect.left, rect.top + i * rect.height, rect.width, rect.height));
-
 	}
 }
 

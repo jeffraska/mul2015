@@ -27,11 +27,11 @@ void Character::init(sf::Time frameTime, float speed) {
 }
 
 void Character::setTexture(
-		TextureType type,
-		Direction dir,
-		const sf::Texture& texture,
-		sf::IntRect rect, int count) {
-	Animation *anim;
+	TextureType type,
+	Direction dir,
+	const sf::Texture& texture,
+	sf::IntRect rect, int count) {
+	Animation *anim = NULL;
 
 	if (type == tCharacterWalk) {
 		if (dir == dRight)
@@ -52,13 +52,15 @@ void Character::setWeapon(Weapon w) {
 	if (wStatus == wWalk) {
 		wStatus = wStop;
 		go(direction);
-	} else {
+	}
+	else {
 		stop();
 	}
 
 	if (fStatus == fFire) {
 		fire();
-	} else {
+	}
+	else {
 		holdFire();
 	}
 }
@@ -70,7 +72,8 @@ void Character::go(Direction d) {
 
 		if (direction == dRight) {
 			weapon.sprite.setPosition(position.x + weapon.weaponOffset.x, position.y + weapon.weaponOffset.y);
-		} else {
+		}
+		else {
 			weapon.sprite.setPosition(position.x - weapon.weaponOffset.x, position.y + weapon.weaponOffset.y);
 		}
 
@@ -78,13 +81,15 @@ void Character::go(Direction d) {
 
 		if (d == dRight) {
 			sprite.play(rightWalk);
-		} else {
+		}
+		else {
 			sprite.play(leftWalk);
 		}
 
 		if (fStatus == fFire) {
 			fire();
-		} else {
+		}
+		else {
 			holdFire();
 		}
 	}
@@ -127,7 +132,8 @@ void Character::setPosition(float x, float y) {
 	sprite.setPosition(x, y);
 	if (direction == dRight) {
 		weapon.sprite.setPosition(x + weapon.weaponOffset.x, y + weapon.weaponOffset.y);
-	} else {
+	}
+	else {
 		weapon.sprite.setPosition(x - weapon.weaponOffset.x, y + weapon.weaponOffset.y);
 	}
 }
@@ -139,7 +145,8 @@ void Character::setPosition(const sf::Vector2f& pos) {
 	sprite.setPosition(pos.x, pos.y);
 	if (direction == dRight) {
 		weapon.sprite.setPosition(pos.x + weapon.weaponOffset.x, pos.y + weapon.weaponOffset.y);
-	} else {
+	}
+	else {
 		weapon.sprite.setPosition(pos.x - weapon.weaponOffset.x, pos.y + weapon.weaponOffset.y);
 	}
 }

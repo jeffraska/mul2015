@@ -12,56 +12,57 @@ game::game() {
 }
 
 game::~game() {
-	for (map<string, sf::Music*>::iterator i = music.begin(); i != music.end(); i++) {
-		i->second->stop();
-		delete i->second;
-		music.erase(i);
+	for (int i = 0; i < music.size(); i++)
+	{
+		music.begin()->second->stop();
+		delete music.begin()->second;
+		music.erase(music.begin());
 	}
 }
 
 void game::init() {
 	// prepare player animation
 	player.setTexture(
-			Character::tCharacterWalk,
-			Character::dRight,
-			textures.at("player"),
-			sf::IntRect(0, 0, 200, 250),
-			10
-			);
+		Character::tCharacterWalk,
+		Character::dRight,
+		textures.at("player"),
+		sf::IntRect(0, 0, 200, 250),
+		10
+		);
 
 	player.setTexture(
-			Character::tCharacterWalk,
-			Character::dLeft,
-			textures.at("player"),
-			sf::IntRect(0, 250, 200, 250),
-			10
-			);
+		Character::tCharacterWalk,
+		Character::dLeft,
+		textures.at("player"),
+		sf::IntRect(0, 250, 200, 250),
+		10
+		);
 
 	Weapon machinegun(
-			"machinegun",
-			sf::Vector2f(40, 100),
-			sf::IntRect(0, 0, 200, 100),
-			10,
-			sf::IntRect(0, 100, 200, 100),
-			10,
-			sf::IntRect(0, 200, 200, 100),
-			10,
-			sf::IntRect(0, 300, 200, 100),
-			10
-			);
+		"machinegun",
+		sf::Vector2f(40, 100),
+		sf::IntRect(0, 0, 200, 100),
+		10,
+		sf::IntRect(0, 100, 200, 100),
+		10,
+		sf::IntRect(0, 200, 200, 100),
+		10,
+		sf::IntRect(0, 300, 200, 100),
+		10
+		);
 
 	Weapon laser(
-			"laser",
-			sf::Vector2f(40, 100),
-			sf::IntRect(0, 0, 200, 100),
-			10,
-			sf::IntRect(0, 100, 200, 100),
-			10,
-			sf::IntRect(0, 200, 200, 100),
-			10,
-			sf::IntRect(0, 300, 200, 100),
-			10
-			);
+		"laser",
+		sf::Vector2f(40, 100),
+		sf::IntRect(0, 0, 200, 100),
+		10,
+		sf::IntRect(0, 100, 200, 100),
+		10,
+		sf::IntRect(0, 200, 200, 100),
+		10,
+		sf::IntRect(0, 300, 200, 100),
+		10
+		);
 
 	weapons.insert(std::pair<string, Weapon>("machinegun", machinegun));
 	weapons.insert(std::pair<string, Weapon>("laser", laser));
