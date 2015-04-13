@@ -4,11 +4,20 @@
 #include <cerrno>
 #include "game.h"
 
+// sf::Music and sf::SoundBuffer must be created separately in different threads
+sf::Mutex OpenALMutex;
+
 game::game() {
-	// load all textures
-	loadTextures();
-	loadSounds();
-	loadMusic();
+	sf::Thread texT(&game::loadTextures, this);
+	texT.launch();
+	sf::Thread sndT(&game::loadSounds, this);
+	sndT.launch();
+	sf::Thread musT(&game::loadMusic, this);
+	musT.launch();
+
+	texT.wait();
+	sndT.wait();
+	musT.wait();
 }
 
 game::~game() {
@@ -111,7 +120,9 @@ void game::loadSounds() {
 	for (map<string, string>::iterator i = files.begin(); i != files.end(); i++) {
 		cout << "Opening " << i->second << endl;
 
+		OpenALMutex.lock();
 		sf::SoundBuffer sound;
+		OpenALMutex.unlock();
 		sound.loadFromFile(i->second);
 		sounds.insert(std::pair<string, sf::SoundBuffer>(i->first, sound));
 	}
@@ -124,7 +135,9 @@ void game::loadMusic() {
 		cout << "Opening " << i->second << endl;
 
 		sf::Music *m;
+		OpenALMutex.lock();
 		m = new sf::Music();
+		OpenALMutex.unlock();
 		m->openFromFile(i->second);
 		m->setLoop(true);
 		music.insert(std::pair<string, sf::Music*>(i->first, m));

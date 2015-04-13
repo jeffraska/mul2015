@@ -4,6 +4,7 @@
 #include <SFML/System.hpp>
 #include "game.h"
 #include "main.h"
+#include "particle.h"
 
 using namespace std;
 
@@ -11,14 +12,62 @@ void renderThread() {
 	sf::Clock frameClock;
 	game &g = game::getInstance();
 
+	/*vector<int> terrain;
+	terrain.push_back(0);
+
+	srand(time(NULL));
+	for (int i = 0; i < 10; i++)
+	{
+	int random = rand() % 100 - 50;
+	if (random > 30)
+	terrain.push_back(terrain[i] + 1);
+	else if (random < -30)
+	terrain.push_back(terrain[i] - 1);
+	else
+	terrain.push_back(terrain[i]);
+	}*/
+
+	/*sf::Shader shader;
+	if (sf::Shader::isAvailable())
+	{
+	const string fragmentShader = "uniform sampler2D texture; void main() { vec4 ref = texture2D(texture, gl_TexCoord[0].xy) * gl_Color; gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0) - ref; gl_FragColor.a = ref.a;	}";
+	shader.loadFromMemory(fragmentShader, sf::Shader::Fragment);
+	shader.setParameter("texture", sf::Shader::CurrentTexture);
+	}*/
+
+	ParticleSystem fire(window.getSize());
+	fire.setShape(Shape::SQUARE);
+	fire.setPosition(500, 500);
+	fire.setGravity(0, 0.5);
+	fire.setParticleSpeed(50);
+	fire.fuel(100);
+	fire.setDissolutionRate(5);
+
+	fire.setDistribution();
+	fire.setDissolve();
+
 	while (window.isOpen()) {
 		sf::Time frameTime = frameClock.restart();
 
 		// animate
 		g.player.animate(frameTime);
+		fire.update(static_cast<float>(20) / 1000);
 
 		// draw
 		window.clear(sf::Color::White);
+
+		/*for (int i = 0; i < terrain.size() - 1; i++)
+		{
+		//sf::RectangleShape line(sf::Vector2f()
+		int w = 100;
+		int h = 50;
+		sf::Vertex line[] = {
+		sf::Vertex(sf::Vector2f(i * w, terrain[i] * h + window.getSize().y / 2 + 125), sf::Color::Black),
+		sf::Vertex(sf::Vector2f((i + 1) * w, terrain[i + 1] * h + window.getSize().y / 2 + 125), sf::Color::Black)
+		};
+
+		window.draw(line, 2, sf::Lines);
+		}*/
 
 		if (g.player.getDirection() == Character::dRight) {
 			window.draw(g.player.sprite);
@@ -28,15 +77,20 @@ void renderThread() {
 			window.draw(g.player.weapon.sprite);
 			window.draw(g.player.sprite);
 		}
+
+		window.draw(fire);
+
 		window.display();
+		sf::sleep(sf::milliseconds(5));
 	}
 }
 
 int main(int argc, char** argv) {
 	// create window
-	window.create(sf::VideoMode::getDesktopMode(), "MUL 2015", sf::Style::Fullscreen);
+	window.create(sf::VideoMode::getDesktopMode(), "MUL 2015"/*, sf::Style::Fullscreen*/);
 	window.setVerticalSyncEnabled(true);
 	window.setKeyRepeatEnabled(false);
+	window.setActive(false);
 	game &g = game::getInstance();
 
 	sf::Sound shotSound;
@@ -44,7 +98,7 @@ int main(int argc, char** argv) {
 	sf::Sound explosionSound;
 	sf::Sound gunloadSound;
 
-	// create window event handler thread
+	// create rendering thread
 	sf::Thread renderThread(&renderThread);
 	renderThread.launch();
 
@@ -73,7 +127,7 @@ int main(int argc, char** argv) {
 	bool doLoop = true;
 
 	while (window.isOpen()) {
-		if (window.pollEvent(event)) {
+		if (window.waitEvent(event)) {
 			switch (event.type) {
 			case sf::Event::Closed:
 				doLoop = false;

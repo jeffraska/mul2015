@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\textures">
+      <UniqueIdentifier>{8b82a349-8d59-402f-80e9-bd0bab5af5b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\music">
+      <UniqueIdentifier>{ac62c9d9-8e93-46d4-8a69-575d365e4387}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\sounds">
+      <UniqueIdentifier>{ed179ca1-6a7a-4371-b09d-439fadd26b76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Other">
+      <UniqueIdentifier>{b55d227d-dbce-45e6-a6ed-f4f377176286}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\main.h">
@@ -31,6 +43,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Weapon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Particle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,5 +68,48 @@
     <ClCompile Include="..\src\Weapon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Particle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\music\drums.ogg">
+      <Filter>Resource Files\music</Filter>
+    </None>
+    <None Include="..\music\horor.ogg">
+      <Filter>Resource Files\music</Filter>
+    </None>
+    <None Include="..\sounds\explosion.ogg">
+      <Filter>Resource Files\sounds</Filter>
+    </None>
+    <None Include="..\sounds\gunload.ogg">
+      <Filter>Resource Files\sounds</Filter>
+    </None>
+    <None Include="..\sounds\laser.ogg">
+      <Filter>Resource Files\sounds</Filter>
+    </None>
+    <None Include="..\sounds\machinegun.ogg">
+      <Filter>Resource Files\sounds</Filter>
+    </None>
+    <None Include="..\sounds\step.ogg">
+      <Filter>Resource Files\sounds</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\textures\cloud.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="..\textures\laser.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="..\textures\player.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="..\textures\machinegunshot.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="..\textures\machinegun.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>
