@@ -57,7 +57,9 @@ void game::init() {
 		sf::IntRect(0, 200, 200, 100),
 		10,
 		sf::IntRect(0, 300, 200, 100),
-		10
+		10,
+		15,
+		sf::milliseconds(100)
 		);
 
 	Weapon laser(
@@ -70,7 +72,9 @@ void game::init() {
 		sf::IntRect(0, 200, 200, 100),
 		10,
 		sf::IntRect(0, 300, 200, 100),
-		10
+		10,
+		20,
+		sf::milliseconds(200)
 		);
 
 	weapons.insert(std::pair<string, Weapon>("machinegun", machinegun));

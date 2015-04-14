@@ -14,13 +14,17 @@ Weapon::Weapon(
 	sf::IntRect fireR,
 	int fireRCount,
 	sf::IntRect fireL,
-	int fireLCount) {
+	int fireLCount,
+	float shotS,
+	sf::Time rate) {
 	name = n;
 	setTexture(tGunWalk, dRight, game::getInstance().textures[name], walkR, walkRCount);
 	setTexture(tGunWalk, dLeft, game::getInstance().textures[name], walkL, walkLCount);
 	setTexture(tGunFire, dRight, game::getInstance().textures[name], fireR, fireRCount);
 	setTexture(tGunFire, dLeft, game::getInstance().textures[name], fireL, fireLCount);
 	weaponOffset = offset;
+	shotSpeed = shotS;
+	m_frameTime = rate;
 }
 
 void Weapon::setTexture(

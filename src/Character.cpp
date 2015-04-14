@@ -1,4 +1,5 @@
 #include "Character.h"
+#include "game.h"
 #include <iostream>
 #include <cmath>
 
@@ -165,6 +166,35 @@ void Character::animate(sf::Time deltaTime) {
 				setPosition(position.x + characterSpeed, position.y);
 			else
 				setPosition(position.x - characterSpeed, position.y);
+		}
+	}
+
+	if (fStatus == fFire)
+	{
+		weapon.m_currentTime += deltaTime;
+		if (weapon.m_currentTime > weapon.m_frameTime)
+		{
+			weapon.m_currentTime = sf::microseconds(weapon.m_currentTime.asMicroseconds() % weapon.m_frameTime.asMicroseconds());
+
+			game &g = game::getInstance();
+			Shot *s = new Shot();
+			s->setTexture(Shot::dRight, g.textures[weapon.name + "shot"], sf::IntRect(0, 0, 80, 34), 10);
+			s->setTexture(Shot::dLeft, g.textures[weapon.name + "shot"], sf::IntRect(0, 34, 80, 34), 10);
+
+			s->init(sf::milliseconds(10), weapon.shotSpeed);
+
+			if (direction == dRight)
+			{
+				s->setPosition(position.x + weapon.weaponOffset.x + weapon.gunRightFire.getFrame(0).width, position.y + weapon.weaponOffset.y + s->leftShot.getFrame(0).height);
+				s->go(Shot::dRight);
+			}
+			else
+			{
+				s->setPosition(position.x - weapon.weaponOffset.x - weapon.gunLeftFire.getFrame(0).width + s->leftShot.getFrame(0).width, position.y + weapon.weaponOffset.y + s->leftShot.getFrame(0).height);
+				s->go(Shot::dLeft);
+			}
+
+			g.shots.push_back(s);
 		}
 	}
 

@@ -52,6 +52,10 @@ void renderThread() {
 		// animate
 		g.player.animate(frameTime);
 		fire.update(static_cast<float>(20) / 1000);
+		for (int i = 0; i < g.shots.size(); i++)
+		{
+			g.shots[i]->animate(frameTime);
+		}
 
 		// draw
 		window.clear(sf::Color::White);
@@ -69,6 +73,10 @@ void renderThread() {
 		window.draw(line, 2, sf::Lines);
 		}*/
 
+		/*
+			Vykreslit pozadí
+			*/
+
 		if (g.player.getDirection() == Character::dRight) {
 			window.draw(g.player.sprite);
 			window.draw(g.player.weapon.sprite);
@@ -77,6 +85,19 @@ void renderThread() {
 			window.draw(g.player.weapon.sprite);
 			window.draw(g.player.sprite);
 		}
+
+		/*
+			vykreslit nepøátele
+			*/
+
+		for (int i = 0; i < g.shots.size(); i++)
+		{
+			window.draw(g.shots[i]->sprite);
+		}
+
+		/*
+			vykreslit mapu
+			*/
 
 		window.draw(fire);
 

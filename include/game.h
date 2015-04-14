@@ -4,6 +4,7 @@
 #include <SFML/Audio.hpp>
 #include "AnimatedSprite.hpp"
 #include "Character.h"
+#include "Shot.h"
 
 #ifndef GAME_H
 #define	GAME_H
@@ -28,6 +29,7 @@ public:
 	map<string, sf::Music*> music;
 	Character player;
 	map<string, Weapon> weapons;
+	vector<Shot*> shots;
 private:
 	game();
 	~game();
@@ -42,4 +44,3 @@ private:
 };
 
 #endif	/* GAME_H */
-
