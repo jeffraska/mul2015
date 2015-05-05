@@ -1,4 +1,5 @@
 #include "Shot.h"
+#include "game.h"
 #include <iostream>
 #include <cmath>
 
@@ -67,7 +68,16 @@ void Shot::animate(sf::Time deltaTime) {
 			setPosition(position.x + shotSpeed, position.y);
 		else
 			setPosition(position.x - shotSpeed, position.y);
+
+		totalDistance += shotSpeed;
 	}
 
 	sprite.update(deltaTime);
+	if (totalDistance > maxDistance)
+	{
+		game &g = game::getInstance();
+		vector<Shot*>::iterator  s = find(g.shots.begin(), g.shots.end(), this);
+		g.shots.erase(s);
+		delete this;
+	}
 }

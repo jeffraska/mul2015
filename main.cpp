@@ -9,6 +9,7 @@
 using namespace std;
 
 void renderThread() {
+	cout << "Rendering thread created" << endl;
 	sf::Clock frameClock;
 	game &g = game::getInstance();
 
@@ -36,15 +37,21 @@ void renderThread() {
 	}*/
 
 	ParticleSystem fire(window.getSize());
-	fire.setShape(Shape::SQUARE);
 	fire.setPosition(500, 500);
-	fire.setGravity(0, 0.5);
-	fire.setParticleSpeed(50);
-	fire.fuel(100);
-	fire.setDissolutionRate(5);
+	fire.setGravity(0, -7);
+	fire.setParticleSpeed(25);
+	fire.fuel(200);
+	fire.setDissolutionRate(4);
 
 	fire.setDistribution();
 	fire.setDissolve();
+
+	sf::Time a;
+
+	// scrolling map view
+	sf::View v = window.getView();
+	//v.move(-500, 0);
+	window.setView(v);
 
 	while (window.isOpen()) {
 		sf::Time frameTime = frameClock.restart();
@@ -59,6 +66,15 @@ void renderThread() {
 
 		// draw
 		window.clear(sf::Color::White);
+
+		a += frameTime;
+		if (a.asMilliseconds() > 50)
+		{
+			a = sf::microseconds(a.asMicroseconds() % frameTime.asMicroseconds());
+			fire.fuel(200);
+		}
+
+		//fire.setPosition(g.player.getPosition() + sf::Vector2f(100, 50));
 
 		/*for (int i = 0; i < terrain.size() - 1; i++)
 		{
@@ -76,6 +92,8 @@ void renderThread() {
 		/*
 			Vykreslit pozadí
 			*/
+
+		window.draw(fire);
 
 		if (g.player.getDirection() == Character::dRight) {
 			window.draw(g.player.sprite);
@@ -99,11 +117,10 @@ void renderThread() {
 			vykreslit mapu
 			*/
 
-		window.draw(fire);
-
 		window.display();
 		sf::sleep(sf::milliseconds(5));
 	}
+	cout << "Rendering thread stop" << endl;
 }
 
 int main(int argc, char** argv) {

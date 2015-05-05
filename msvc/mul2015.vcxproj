@@ -96,6 +96,7 @@
     <ClInclude Include="..\include\Shot.h" />
     <ClInclude Include="..\include\Weapon.h" />
     <ClInclude Include="..\main.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\main.cpp" />
@@ -122,6 +123,10 @@
     <Image Include="..\textures\machinegun.png" />
     <Image Include="..\textures\machinegunshot.png" />
     <Image Include="..\textures\player.png" />
+    <Image Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="mul2015.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

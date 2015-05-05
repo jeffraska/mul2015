@@ -16,7 +16,8 @@ Weapon::Weapon(
 	sf::IntRect fireL,
 	int fireLCount,
 	float shotS,
-	sf::Time rate) {
+	sf::Time rate,
+	float maxDist) {
 	name = n;
 	setTexture(tGunWalk, dRight, game::getInstance().textures[name], walkR, walkRCount);
 	setTexture(tGunWalk, dLeft, game::getInstance().textures[name], walkL, walkLCount);
@@ -25,6 +26,8 @@ Weapon::Weapon(
 	weaponOffset = offset;
 	shotSpeed = shotS;
 	m_frameTime = rate;
+	m_currentTime = m_frameTime;
+	maxDistance = maxDist;
 }
 
 void Weapon::setTexture(

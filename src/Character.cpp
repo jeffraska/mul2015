@@ -178,6 +178,7 @@ void Character::animate(sf::Time deltaTime) {
 
 			game &g = game::getInstance();
 			Shot *s = new Shot();
+			s->maxDistance = weapon.maxDistance;
 			s->setTexture(Shot::dRight, g.textures[weapon.name + "shot"], sf::IntRect(0, 0, 80, 34), 10);
 			s->setTexture(Shot::dLeft, g.textures[weapon.name + "shot"], sf::IntRect(0, 34, 80, 34), 10);
 

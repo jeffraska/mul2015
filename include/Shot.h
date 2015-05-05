@@ -25,6 +25,7 @@ public:
 
 	Animation rightShot;
 	Animation leftShot;
+	float maxDistance;
 private:
 	Direction direction;
 
@@ -34,6 +35,7 @@ private:
 	sf::Time m_currentTime;
 	float shotSpeed;
 	sf::Time refreshRate;
+	float totalDistance;
 };
 
 #endif	/* CHARACTER_H */

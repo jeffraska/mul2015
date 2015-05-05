@@ -124,11 +124,11 @@ void ParticleSystem::update(float deltaTime)
 		/* If they are set to disolve, disolve */
 		if (m_dissolve) (*it)->drawVertex.color.a -= m_dissolutionRate;
 
-		if ((*it)->drawVertex.position.x > m_canvasSize.x
+		if (/*(*it)->drawVertex.position.x > m_canvasSize.x
 			|| (*it)->drawVertex.position.x < 0
 			|| (*it)->drawVertex.position.y > m_canvasSize.y
 			|| (*it)->drawVertex.position.y < 0
-			|| (*it)->drawVertex.color.a < 10)
+			|| */(*it)->drawVertex.color.a < 10)
 		{
 			it = m_particles.erase(it);
 			if (it == m_particles.end()) return;

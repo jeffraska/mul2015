@@ -48,33 +48,35 @@ void game::init() {
 		);
 
 	Weapon machinegun(
-		"machinegun",
-		sf::Vector2f(40, 100),
-		sf::IntRect(0, 0, 200, 100),
-		10,
-		sf::IntRect(0, 100, 200, 100),
-		10,
-		sf::IntRect(0, 200, 200, 100),
-		10,
-		sf::IntRect(0, 300, 200, 100),
-		10,
-		15,
-		sf::milliseconds(100)
+		"machinegun",							// name (require name.png, nameshot.png, name.ogg)
+		sf::Vector2f(40, 100),				// offset
+		sf::IntRect(0, 0, 200, 100),		// walk right sprite coordinates
+		10,									// number of walk right sprites
+		sf::IntRect(0, 100, 200, 100),		// walk left sprite coordinates
+		10,									// number of walk left sprites
+		sf::IntRect(0, 200, 200, 100),		// fire right sprite coordinates
+		10,									// number of fire right sprites
+		sf::IntRect(0, 300, 200, 100),		// fire left sprite coordinates
+		10,									// number of shot right sprites
+		15,									// speed of shot
+		sf::milliseconds(100),				// shot rate
+		500									// max shot distance
 		);
 
 	Weapon laser(
-		"laser",
-		sf::Vector2f(40, 100),
-		sf::IntRect(0, 0, 200, 100),
-		10,
-		sf::IntRect(0, 100, 200, 100),
-		10,
-		sf::IntRect(0, 200, 200, 100),
-		10,
-		sf::IntRect(0, 300, 200, 100),
-		10,
-		20,
-		sf::milliseconds(200)
+		"laser",							// name (require name.png, nameshot.png, name.ogg)
+		sf::Vector2f(40, 100),				// offset
+		sf::IntRect(0, 0, 200, 100),		// walk right sprite coordinates
+		10,									// number of walk right sprites
+		sf::IntRect(0, 100, 200, 100),		// walk left sprite coordinates
+		10,									// number of walk left sprites
+		sf::IntRect(0, 200, 200, 100),		// fire right sprite coordinates
+		10,									// number of fire right sprites
+		sf::IntRect(0, 300, 200, 100),		// fire left sprite coordinates
+		10,									// number of shot right sprites
+		20,									// speed of shot
+		sf::milliseconds(200),				// shot rate
+		1000								// max shot distance
 		);
 
 	weapons.insert(std::pair<string, Weapon>("machinegun", machinegun));
