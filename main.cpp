@@ -13,6 +13,9 @@ void renderThread() {
 	sf::Clock frameClock;
 	game &g = game::getInstance();
 
+	sf::Text score;
+	sf::Text lives;
+
 	/*vector<int> terrain;
 	terrain.push_back(0);
 
@@ -37,7 +40,7 @@ void renderThread() {
 	}*/
 
 	ParticleSystem fire(window.getSize());
-	fire.setPosition(500, 500);
+	//fire.setPosition(500, 500);
 	fire.setGravity(0, -7);
 	fire.setParticleSpeed(25);
 	fire.fuel(200);
@@ -49,9 +52,22 @@ void renderThread() {
 	sf::Time a;
 
 	// scrolling map view
-	sf::View v = window.getView();
-	//v.move(-500, 0);
-	window.setView(v);
+	gameView = window.getView();
+	fixedView = window.getView();
+	gameView.move(-500, 0);
+	window.setView(gameView);
+
+	// GUI
+	score.setFont(g.fonts["Jose"]);
+	score.setString("$00000");
+	score.setColor(sf::Color::Black);
+	score.setCharacterSize(72);
+
+	lives.setFont(g.fonts["Jose"]);
+	lives.setString("100");
+	lives.setColor(sf::Color::Black);
+	lives.setPosition(fixedView.getCenter().x - (lives.getLocalBounds().width), 0);
+	lives.setCharacterSize(72);
 
 	while (window.isOpen()) {
 		sf::Time frameTime = frameClock.restart();
@@ -95,6 +111,7 @@ void renderThread() {
 
 		window.draw(fire);
 
+#pragma region
 		if (g.player.getDirection() == Character::dRight) {
 			window.draw(g.player.sprite);
 			window.draw(g.player.weapon.sprite);
@@ -103,7 +120,7 @@ void renderThread() {
 			window.draw(g.player.weapon.sprite);
 			window.draw(g.player.sprite);
 		}
-
+#pragma endregion player sprite
 		/*
 			vykreslit nepøátele
 			*/
@@ -113,9 +130,17 @@ void renderThread() {
 			window.draw(g.shots[i]->sprite);
 		}
 
-		/*
-			vykreslit mapu
-			*/
+		// Draw GUI
+#pragma region
+
+		window.setView(fixedView);
+
+		window.draw(score);
+		window.draw(lives);
+
+		window.setView(gameView);
+
+#pragma endregion GUI
 
 		window.display();
 		sf::sleep(sf::milliseconds(5));
@@ -228,6 +253,10 @@ int main(int argc, char** argv) {
 					g.player.holdFire();
 					shotSound.setLoop(false);
 				}
+				break;
+			case sf::Event::Resized:
+				/*gameView.setSize(event.size.width, event.size.height);
+				fixedView.setSize(event.size.width, event.size.height);*/
 				break;
 			}
 		}

@@ -20,7 +20,23 @@ public:
 	};
 
 	Weapon();
-	Weapon(string name, sf::Vector2f offset, sf::IntRect walkR, int walkRCount, sf::IntRect walkL, int walkLCount, sf::IntRect fireR, int fireRCount, sf::IntRect fireL, int fireLCount, float shotSpeed, sf::Time rate, float maxDist);
+	Weapon(string name,
+		sf::Vector2f offset,
+		sf::IntRect walkR,
+		int walkRCount,
+		sf::IntRect walkL,
+		int walkLCount,
+		sf::IntRect fireR,
+		int fireRCount,
+		sf::IntRect fireL,
+		int fireLCount,
+		sf::IntRect shotR,
+		int shotRCount,
+		sf::IntRect shotL,
+		int shotLCount,
+		float shotSpeed,
+		sf::Time rate,
+		float maxDist);
 	void setTexture(TextureType, Direction, const sf::Texture& texture, sf::IntRect, int);
 
 	AnimatedSprite sprite;
@@ -34,6 +50,12 @@ public:
 
 	sf::Time m_frameTime;
 	sf::Time m_currentTime;
+
+	sf::IntRect ShotRight;
+	sf::IntRect ShotLeft;
+
+	int ShotRightCount;
+	int ShotLeftCount;
 
 	float shotSpeed;
 	float maxDistance;

@@ -8,4 +8,7 @@
 sf::Mutex windowMutex;
 sf::RenderWindow window;
 
+sf::View gameView;
+sf::View fixedView;
+
 #endif	/* MAIN_H */

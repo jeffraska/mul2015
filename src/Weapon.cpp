@@ -15,6 +15,10 @@ Weapon::Weapon(
 	int fireRCount,
 	sf::IntRect fireL,
 	int fireLCount,
+	sf::IntRect shotR,
+	int shotRCount,
+	sf::IntRect shotL,
+	int shotLCount,
 	float shotS,
 	sf::Time rate,
 	float maxDist) {
@@ -28,6 +32,11 @@ Weapon::Weapon(
 	m_frameTime = rate;
 	m_currentTime = m_frameTime;
 	maxDistance = maxDist;
+
+	ShotRight = shotR;
+	ShotLeft = shotL;
+	ShotRightCount = shotRCount;
+	ShotLeftCount = shotLCount;
 }
 
 void Weapon::setTexture(

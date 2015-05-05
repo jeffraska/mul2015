@@ -27,6 +27,7 @@ public:
 	map<string, sf::Texture> textures;
 	map<string, sf::SoundBuffer> sounds;
 	map<string, sf::Music*> music;
+	map<string, sf::Font> fonts;
 	Character player;
 	map<string, Weapon> weapons;
 	vector<Shot*> shots;
@@ -40,6 +41,7 @@ private:
 	void loadTextures();
 	void loadSounds();
 	void loadMusic();
+	void loadFonts();
 	void init();
 };
 

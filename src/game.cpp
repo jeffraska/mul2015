@@ -14,10 +14,13 @@ game::game() {
 	sndT.launch();
 	sf::Thread musT(&game::loadMusic, this);
 	musT.launch();
+	sf::Thread fontT(&game::loadFonts, this);
+	fontT.launch();
 
 	texT.wait();
 	sndT.wait();
 	musT.wait();
+	fontT.wait();
 }
 
 game::~game() {
@@ -57,7 +60,11 @@ void game::init() {
 		sf::IntRect(0, 200, 200, 100),		// fire right sprite coordinates
 		10,									// number of fire right sprites
 		sf::IntRect(0, 300, 200, 100),		// fire left sprite coordinates
-		10,									// number of shot right sprites
+		10,									// number of fire right sprites
+		sf::IntRect(0, 0, 27, 34),			// shot right sprite coordinates
+		1,									// number of shot right sprites
+		sf::IntRect(0, 34, 27, 34),			// shot left sprite coordinates
+		1,									// number of shot left sprites
 		15,									// speed of shot
 		sf::milliseconds(100),				// shot rate
 		500									// max shot distance
@@ -73,7 +80,11 @@ void game::init() {
 		sf::IntRect(0, 200, 200, 100),		// fire right sprite coordinates
 		10,									// number of fire right sprites
 		sf::IntRect(0, 300, 200, 100),		// fire left sprite coordinates
+		10,									// number of fire left sprites
+		sf::IntRect(0, 0, 80, 34),			// shot right sprite coordinates
 		10,									// number of shot right sprites
+		sf::IntRect(0, 34, 80, 34),			// shot left sprite coordinates
+		10,									// number of shot left sprites
 		20,									// speed of shot
 		sf::milliseconds(200),				// shot rate
 		1000								// max shot distance
@@ -129,7 +140,12 @@ void game::loadSounds() {
 		OpenALMutex.lock();
 		sf::SoundBuffer sound;
 		OpenALMutex.unlock();
-		sound.loadFromFile(i->second);
+		if (!sound.loadFromFile(i->second))
+		{
+			cerr << "Cannot open " << i->second << endl;
+			continue;
+		}
+
 		sounds.insert(std::pair<string, sf::SoundBuffer>(i->first, sound));
 	}
 }
@@ -144,8 +160,31 @@ void game::loadMusic() {
 		OpenALMutex.lock();
 		m = new sf::Music();
 		OpenALMutex.unlock();
-		m->openFromFile(i->second);
+		if (!m->openFromFile(i->second))
+		{
+			delete m;
+			cerr << "Cannot open " << i->second << endl;
+			continue;
+		}
 		m->setLoop(true);
 		music.insert(std::pair<string, sf::Music*>(i->first, m));
+	}
+}
+
+void game::loadFonts() {
+	map<string, string> files = getFiles("textures/", ".ttf");
+
+	for (map<string, string>::iterator i = files.begin(); i != files.end(); i++) {
+		cout << "Opening " << i->second << endl;
+
+		sf::Font f;
+
+		if (!f.loadFromFile(i->second))
+		{
+			cerr << "Cannot open " << i->second << endl;
+			continue;
+		}
+
+		fonts.insert(std::pair<string, sf::Font>(i->first, f));
 	}
 }

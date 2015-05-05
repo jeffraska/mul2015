@@ -115,6 +115,7 @@ void Character::fire() {
 
 void Character::holdFire() {
 	fStatus = fHold;
+	weapon.m_currentTime = weapon.m_frameTime;
 
 	if (direction == dRight)
 		weapon.sprite.play(weapon.gunRightWalk);
@@ -179,8 +180,8 @@ void Character::animate(sf::Time deltaTime) {
 			game &g = game::getInstance();
 			Shot *s = new Shot();
 			s->maxDistance = weapon.maxDistance;
-			s->setTexture(Shot::dRight, g.textures[weapon.name + "shot"], sf::IntRect(0, 0, 80, 34), 10);
-			s->setTexture(Shot::dLeft, g.textures[weapon.name + "shot"], sf::IntRect(0, 34, 80, 34), 10);
+			s->setTexture(Shot::dRight, g.textures[weapon.name + "shot"], weapon.ShotRight, weapon.ShotRightCount);
+			s->setTexture(Shot::dLeft, g.textures[weapon.name + "shot"], weapon.ShotLeft, weapon.ShotLeftCount);
 
 			s->init(sf::milliseconds(10), weapon.shotSpeed);
 
@@ -191,7 +192,7 @@ void Character::animate(sf::Time deltaTime) {
 			}
 			else
 			{
-				s->setPosition(position.x - weapon.weaponOffset.x - weapon.gunLeftFire.getFrame(0).width + s->leftShot.getFrame(0).width, position.y + weapon.weaponOffset.y + s->leftShot.getFrame(0).height);
+				s->setPosition(position.x - weapon.weaponOffset.x - s->leftShot.getFrame(0).width, position.y + weapon.weaponOffset.y + s->leftShot.getFrame(0).height);
 				s->go(Shot::dLeft);
 			}
 
