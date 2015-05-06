@@ -49,6 +49,7 @@ void renderThread() {
 	fire.setDistribution();
 	fire.setDissolve();
 
+	sf::Time interestRateTime;
 	sf::Time a;
 
 	// scrolling map view
@@ -59,9 +60,10 @@ void renderThread() {
 
 	// GUI
 	score.setFont(g.fonts["Jose"]);
-	score.setString("$00000");
 	score.setColor(sf::Color::Black);
 	score.setCharacterSize(72);
+
+	char scoreStr[10];
 
 	lives.setFont(g.fonts["Jose"]);
 	lives.setString("100");
@@ -82,6 +84,21 @@ void renderThread() {
 
 		// draw
 		window.clear(sf::Color::White);
+
+		// Zvyšování úrokù
+		interestRateTime += frameTime;
+		if (interestRateTime.asSeconds() > 1)
+		{
+			interestRateTime = sf::microseconds(interestRateTime.asMicroseconds() % frameTime.asMicroseconds());
+
+			if (g.dollars > 0)
+			{
+				g.dollars += static_cast<float>(g.dollars) * 0.01;	// úrok 1% na bìžném úètu
+			} else if (g.dollars < 0)
+			{
+				g.dollars += static_cast<float>(g.dollars) * 0.1;	// úrok 10% pøi dluhu
+			}
+		}
 
 		a += frameTime;
 		if (a.asMilliseconds() > 50)
@@ -135,7 +152,11 @@ void renderThread() {
 
 		window.setView(fixedView);
 
+		sprintf_s(scoreStr, 10, "$%05d", static_cast<int>(g.dollars));
+		score.setString(scoreStr);
 		window.draw(score);
+
+		lives.setString(to_string(g.player.lives));
 		window.draw(lives);
 
 		window.setView(gameView);

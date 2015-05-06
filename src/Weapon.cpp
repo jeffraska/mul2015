@@ -20,6 +20,7 @@ Weapon::Weapon(
 	sf::IntRect shotL,
 	int shotLCount,
 	float shotS,
+	int shotP,
 	sf::Time rate,
 	float maxDist) {
 	name = n;
@@ -35,6 +36,7 @@ Weapon::Weapon(
 
 	ShotRight = shotR;
 	ShotLeft = shotL;
+	shotPrice = shotP;
 	ShotRightCount = shotRCount;
 	ShotLeftCount = shotLCount;
 }

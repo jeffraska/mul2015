@@ -1,7 +1,6 @@
 #include "Character.h"
 #include "game.h"
-#include <iostream>
-#include <cmath>
+#include <typeinfo>
 
 Character::Character() {
 	refreshRate = sf::milliseconds(75);
@@ -25,6 +24,8 @@ void Character::init(sf::Time frameTime, float speed) {
 
 	m_frameTime = frameTime;
 	characterSpeed = speed;
+
+	lives = 100;
 }
 
 void Character::setTexture(
@@ -32,7 +33,7 @@ void Character::setTexture(
 	Direction dir,
 	const sf::Texture& texture,
 	sf::IntRect rect, int count) {
-	Animation *anim = NULL;
+	Animation *anim = nullptr;
 
 	if (type == tCharacterWalk) {
 		if (dir == dRight)
@@ -179,7 +180,7 @@ void Character::animate(sf::Time deltaTime) {
 
 			game &g = game::getInstance();
 			Shot *s = new Shot();
-			s->maxDistance = weapon.maxDistance;
+			s->maxDistance = weapon.maxDistance + (rand() % static_cast<int>(weapon.maxDistance/10));
 			s->setTexture(Shot::dRight, g.textures[weapon.name + "shot"], weapon.ShotRight, weapon.ShotRightCount);
 			s->setTexture(Shot::dLeft, g.textures[weapon.name + "shot"], weapon.ShotLeft, weapon.ShotLeftCount);
 
@@ -197,6 +198,8 @@ void Character::animate(sf::Time deltaTime) {
 			}
 
 			g.shots.push_back(s);
+
+			g.dollars -= weapon.shotPrice;
 		}
 	}
 

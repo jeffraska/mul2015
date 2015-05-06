@@ -1,9 +1,8 @@
-#include <list>
 #include <map>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "AnimatedSprite.hpp"
-#include "Character.h"
+#include "Player.h"
+#include "Enemy.h"
 #include "Shot.h"
 
 #ifndef GAME_H
@@ -28,9 +27,11 @@ public:
 	map<string, sf::SoundBuffer> sounds;
 	map<string, sf::Music*> music;
 	map<string, sf::Font> fonts;
-	Character player;
+	Player player;
 	map<string, Weapon> weapons;
 	vector<Shot*> shots;
+	vector<Enemy> enemies;
+	float dollars;
 private:
 	game();
 	~game();

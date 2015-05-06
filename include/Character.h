@@ -36,7 +36,6 @@ public:
 
 	void setWeapon(Weapon);
 
-
 	void fire();
 	void holdFire();
 	void setPosition(float x, float y);
@@ -51,6 +50,7 @@ public:
 
 	AnimatedSprite sprite;
 	Weapon weapon;
+	int lives;
 private:
 	Animation rightWalk;
 	Animation leftWalk;

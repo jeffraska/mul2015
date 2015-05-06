@@ -1,7 +1,5 @@
 #include <dirent.h>
-#include <sys/types.h>
 #include <iostream>
-#include <cerrno>
 #include "game.h"
 
 // sf::Music and sf::SoundBuffer must be created separately in different threads
@@ -66,6 +64,7 @@ void game::init() {
 		sf::IntRect(0, 34, 27, 34),			// shot left sprite coordinates
 		1,									// number of shot left sprites
 		15,									// speed of shot
+		10,									// shot price in $
 		sf::milliseconds(100),				// shot rate
 		500									// max shot distance
 		);
@@ -86,6 +85,7 @@ void game::init() {
 		sf::IntRect(0, 34, 80, 34),			// shot left sprite coordinates
 		10,									// number of shot left sprites
 		20,									// speed of shot
+		20,									// shot price in $
 		sf::milliseconds(200),				// shot rate
 		1000								// max shot distance
 		);
@@ -101,12 +101,12 @@ map<string, string> game::getFiles(string dir, string filetype) {
 
 	DIR *dp;
 	struct dirent *dirp;
-	if ((dp = opendir(dir.c_str())) == NULL) {
+	if ((dp = opendir(dir.c_str())) == nullptr) {
 		cout << "Error (" << errno << ") opening " << dir << endl;
 		return files;
 	}
 
-	while ((dirp = readdir(dp)) != NULL) {
+	while ((dirp = readdir(dp)) != nullptr) {
 		string f(dirp->d_name);
 
 		if (f.rfind(filetype) == (f.size() - filetype.length())) {

@@ -35,6 +35,7 @@ public:
 		sf::IntRect shotL,
 		int shotLCount,
 		float shotSpeed,
+		int shotPrice,
 		sf::Time rate,
 		float maxDist);
 	void setTexture(TextureType, Direction, const sf::Texture& texture, sf::IntRect, int);
@@ -56,6 +57,8 @@ public:
 
 	int ShotRightCount;
 	int ShotLeftCount;
+
+	int shotPrice;
 
 	float shotSpeed;
 	float maxDistance;
