@@ -40,6 +40,7 @@ public:
 	Player player;
 	Enemy tankTemplate;
 	Animation explosionAnimation;
+	sf::Sound explosionSound;
 private:
 	game();
 	~game();

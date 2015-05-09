@@ -48,6 +48,7 @@ void game::init() {
 		10
 		);
 
+	// prepare tank animation
 	tankTemplate.setTexture(
 		Character::tCharacterWalk,
 		Character::dRight,
@@ -135,6 +136,8 @@ void game::init() {
 
 	player.weapon = weapons["machinegun"];
 	tankTemplate.weapon = weapons["tankcanon"];
+
+	explosionSound.setBuffer(sounds["explosion"]);
 }
 
 void game::newEnemy(float x, float y)
@@ -200,7 +203,7 @@ void game::loadSounds() {
 void game::loadMusic() {
 	map<string, string> files = getFiles("music/", ".ogg");
 
-	for (map<string, string>::iterator i = files.begin(); i != files.end(); i++) {
+	for (map<string, string>::iterator i = files.begin(); i != files.end(); ++i) {
 		cout << "Opening " << i->second << endl;
 
 		sf::Music *m;

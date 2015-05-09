@@ -38,7 +38,7 @@ void renderThread() {
 	shader.setParameter("texture", sf::Shader::CurrentTexture);
 	}*/
 
-	ParticleSystem fire(window.getSize());
+	/*ParticleSystem fire(window.getSize());
 	//fire.setPosition(500, 500);
 	fire.setGravity(0, -7);
 	fire.setParticleSpeed(25);
@@ -46,11 +46,11 @@ void renderThread() {
 	fire.setDissolutionRate(4);
 
 	fire.setDistribution();
-	fire.setDissolve();
+	fire.setDissolve();*/
 
 	sf::Time interestRateTime;
 	sf::Time dollarsTextsTime;
-	sf::Time a;
+	//sf::Time a;
 
 	// scrolling map view
 	gameView = window.getView();
@@ -71,15 +71,17 @@ void renderThread() {
 	lives.setPosition(fixedView.getCenter().x - (lives.getLocalBounds().width), 0);
 	lives.setCharacterSize(72);
 
+	float ground = 600;
+
 	while (window.isOpen()) {
 		sf::Time frameTime = frameClock.restart();
 
 		// animate
-		g.player.animate(frameTime, 500);
-		fire.update(static_cast<float>(20) / 1000);
+		g.player.animate(frameTime, ground);
+		//fire.update(static_cast<float>(20) / 1000);
 		for (auto i = 0; i < g.enemies.size(); i++)
 		{
-			g.enemies[i].animate(frameTime, 500);
+			g.enemies[i].animate(frameTime, ground);
 		}
 		for (auto i = 0; i < g.shots.size(); i++)
 		{
@@ -90,7 +92,7 @@ void renderThread() {
 		window.clear(sf::Color::White);
 
 		// Zvyšování úrokù
-		interestRateTime += frameTime;
+		/*interestRateTime += frameTime;
 		if (interestRateTime.asSeconds() > 1)
 		{
 			interestRateTime = sf::microseconds(interestRateTime.asMicroseconds() % frameTime.asMicroseconds());
@@ -102,14 +104,14 @@ void renderThread() {
 			{
 				g.dollars += static_cast<float>(g.dollars) * 0.1;	// úrok 10% pøi dluhu
 			}
-		}
+		}*/
 
-		a += frameTime;
+		/*a += frameTime;
 		if (a.asMilliseconds() > 50)
 		{
 			a = sf::microseconds(a.asMicroseconds() % frameTime.asMicroseconds());
 			fire.fuel(200);
-		}
+		}*/
 
 		//fire.setPosition(g.player.getPosition() + sf::Vector2f(100, 50));
 
@@ -130,7 +132,7 @@ void renderThread() {
 			Vykreslit pozadí
 			*/
 
-		window.draw(fire);
+		//window.draw(fire);
 
 		// Draw enemies
 		for (int i = 0; i < g.enemies.size(); i++)
@@ -257,7 +259,6 @@ int main(int argc, char** argv) {
 
 	// prepare sounds
 	stepSound.setBuffer(g.sounds["step"]);
-	explosionSound.setBuffer(g.sounds["explosion"]);
 	gunloadSound.setBuffer(g.sounds["gunload"]);
 	gunloadSound.setVolume(50);
 
@@ -296,12 +297,10 @@ int main(int argc, char** argv) {
 				if (event.key.code == sf::Keyboard::LControl) {
 					g.player.fire();
 				}
-				if (event.key.code == sf::Keyboard::Up)
+				if (event.key.code == sf::Keyboard::Space ||
+					event.key.code == sf::Keyboard::Up)
 				{
 					g.player.jump();
-				}
-				if (event.key.code == sf::Keyboard::Space) {
-					explosionSound.play();
 				}
 				if (event.key.code == sf::Keyboard::F1) {
 					g.player.setWeapon(g.weapons["machinegun"]);

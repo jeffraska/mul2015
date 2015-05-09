@@ -120,6 +120,7 @@ void Shot::animate(sf::Time deltaTime) {
 				as.play();
 				g.explosions.push_back(as);
 
+				g.explosionSound.play();
 				g.enemies.erase(i);
 			}
 
