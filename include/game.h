@@ -27,11 +27,19 @@ public:
 	map<string, sf::SoundBuffer> sounds;
 	map<string, sf::Music*> music;
 	map<string, sf::Font> fonts;
-	Player player;
 	map<string, Weapon> weapons;
+
 	vector<Shot*> shots;
 	vector<Enemy> enemies;
+	vector<sf::Text> dollarsTexts;
+	vector<AnimatedSprite> explosions;
+
 	float dollars;
+	void newEnemy(float, float);
+
+	Player player;
+	Enemy tankTemplate;
+	Animation explosionAnimation;
 private:
 	game();
 	~game();

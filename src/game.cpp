@@ -48,8 +48,24 @@ void game::init() {
 		10
 		);
 
+	tankTemplate.setTexture(
+		Character::tCharacterWalk,
+		Character::dRight,
+		textures["tank"],
+		sf::IntRect(0, 0, 450, 175),
+		10
+		);
+
+	tankTemplate.setTexture(
+		Character::tCharacterWalk,
+		Character::dLeft,
+		textures["tank"],
+		sf::IntRect(0, 175, 450, 175),
+		10
+		);
+
 	Weapon machinegun(
-		"machinegun",							// name (require name.png, nameshot.png, name.ogg)
+		"machinegun",							// name (require textures/<name>.png, textures/<name>shot.png, sounds/<name>.ogg)
 		sf::Vector2f(40, 100),				// offset
 		sf::IntRect(0, 0, 200, 100),		// walk right sprite coordinates
 		10,									// number of walk right sprites
@@ -66,11 +82,12 @@ void game::init() {
 		15,									// speed of shot
 		10,									// shot price in $
 		sf::milliseconds(100),				// shot rate
-		500									// max shot distance
+		1500,								// max shot distance
+		50									// shot damage
 		);
 
 	Weapon laser(
-		"laser",							// name (require name.png, nameshot.png, name.ogg)
+		"laser",							// name (require textures/<name>.png, textures/<name>shot.png, sounds/<name>.ogg)
 		sf::Vector2f(40, 100),				// offset
 		sf::IntRect(0, 0, 200, 100),		// walk right sprite coordinates
 		10,									// number of walk right sprites
@@ -87,13 +104,43 @@ void game::init() {
 		20,									// speed of shot
 		20,									// shot price in $
 		sf::milliseconds(200),				// shot rate
-		1000								// max shot distance
+		2000,								// max shot distance
+		75									// shot damage
 		);
 
-	weapons.insert(std::pair<string, Weapon>("machinegun", machinegun));
-	weapons.insert(std::pair<string, Weapon>("laser", laser));
+	Weapon tankcanon(
+		"tankcanon",						// name (require textures/<name>.png, textures/<name>shot.png, sounds/<name>.ogg)
+		sf::Vector2f(-50, -10),				// offset
+		sf::IntRect(0, 0, 0, 0),			// walk right sprite coordinates
+		1,									// number of walk right sprites
+		sf::IntRect(0, 0, 0, 0),			// walk left sprite coordinates
+		1,									// number of walk left sprites
+		sf::IntRect(0, 0, 0, 0),			// fire right sprite coordinates
+		1,									// number of fire right sprites
+		sf::IntRect(0, 0, 0, 0),			// fire left sprite coordinates
+		1,									// number of fire right sprites
+		sf::IntRect(0, 0, 27, 34),			// shot right sprite coordinates
+		1,									// number of shot right sprites
+		sf::IntRect(0, 34, 27, 34),			// shot left sprite coordinates
+		1,									// number of shot left sprites
+		25,									// speed of shot
+		0,									// shot price in $
+		sf::milliseconds(2000),				// shot rate
+		2000,								// max shot distance,
+		100									// shot damage
+		);
+
+	explosionAnimation.setSpriteSheet(textures["explosion"]);
+	explosionAnimation.addXFrames(sf::IntRect(0, 0, 320, 240), 10);
 
 	player.weapon = weapons["machinegun"];
+	tankTemplate.weapon = weapons["tankcanon"];
+}
+
+void game::newEnemy(float x, float y)
+{
+	enemies.push_back(tankTemplate);
+	enemies.back().setPosition(x, y);
 }
 
 map<string, string> game::getFiles(string dir, string filetype) {

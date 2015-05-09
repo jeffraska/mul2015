@@ -37,7 +37,8 @@ public:
 		float shotSpeed,
 		int shotPrice,
 		sf::Time rate,
-		float maxDist);
+		float maxDist,
+		int damage);
 	void setTexture(TextureType, Direction, const sf::Texture& texture, sf::IntRect, int);
 
 	AnimatedSprite sprite;
@@ -62,6 +63,8 @@ public:
 
 	float shotSpeed;
 	float maxDistance;
+
+	int damage;
 };
 
 #endif	/* WEAPON_H */

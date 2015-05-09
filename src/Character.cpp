@@ -8,7 +8,7 @@ Character::Character() {
 	refreshRate = sf::milliseconds(75);
 }
 
-void Character::init(sf::Time frameTime, float speed) {
+void Character::init(sf::Time frameTime, float speed, int lives) {
 	direction = dRight;
 	wStatus = wStop;
 	fStatus = fHold;
@@ -24,13 +24,16 @@ void Character::init(sf::Time frameTime, float speed) {
 	weapon.sprite.setLooped(true);
 	weapon.sprite.setPosition(weapon.weaponOffset);
 
+	shotSound.setBuffer(game::getInstance().sounds[weapon.name]);
+	shotSound.setVolume(50);
+
 	m_frameTime = frameTime;
 	characterSpeed = speed;
 
 	jumpFrameTime = sf::milliseconds(10);
 	jStatus = jFall;
 
-	lives = 100;
+	this->lives = lives;
 }
 
 void Character::setTexture(
@@ -55,6 +58,8 @@ void Character::setWeapon(Weapon w) {
 	weapon = w;
 	weapon.sprite.setFrameTime(refreshRate);
 	setPosition(getPosition());
+
+	shotSound.setBuffer(game::getInstance().sounds[weapon.name]);
 
 	if (wStatus == wWalk) {
 		wStatus = wStop;
@@ -112,7 +117,7 @@ void Character::stop() {
 
 void Character::fire() {
 	fStatus = fFire;
-
+	
 	if (direction == dRight)
 		weapon.sprite.play(weapon.gunRightFire);
 	else
@@ -194,7 +199,7 @@ void Character::animate(sf::Time deltaTime, float groundY) {
 			weapon.m_currentTime = sf::microseconds(weapon.m_currentTime.asMicroseconds() % weapon.m_frameTime.asMicroseconds());
 
 			game &g = game::getInstance();
-			Shot *s = new Shot();
+			Shot *s = new Shot(weapon.damage);
 			s->maxDistance = weapon.maxDistance + (rand() % static_cast<int>(weapon.maxDistance/10));
 			s->setTexture(Shot::dRight, g.textures[weapon.name + "shot"], weapon.ShotRight, weapon.ShotRightCount);
 			s->setTexture(Shot::dLeft, g.textures[weapon.name + "shot"], weapon.ShotLeft, weapon.ShotLeftCount);
@@ -213,6 +218,7 @@ void Character::animate(sf::Time deltaTime, float groundY) {
 			}
 
 			g.shots.push_back(s);
+			shotSound.play();
 
 			g.dollars -= weapon.shotPrice;
 		}
@@ -242,9 +248,9 @@ void Character::animate(sf::Time deltaTime, float groundY) {
 			{
 				newY += 20;
 
-				if (newY > groundY)
+				if (newY > groundY - sprite.getAnimation()->getFrame(0).height)
 				{
-					newY = groundY;
+					newY = groundY - sprite.getAnimation()->getFrame(0).height;
 					jumpProgress = 0;
 					//jStatus = jNone;
 				}

@@ -22,7 +22,8 @@ Weapon::Weapon(
 	float shotS,
 	int shotP,
 	sf::Time rate,
-	float maxDist) {
+	float maxDist,
+	int dmg) {
 	name = n;
 	setTexture(tGunWalk, dRight, game::getInstance().textures[name], walkR, walkRCount);
 	setTexture(tGunWalk, dLeft, game::getInstance().textures[name], walkL, walkLCount);
@@ -39,6 +40,10 @@ Weapon::Weapon(
 	shotPrice = shotP;
 	ShotRightCount = shotRCount;
 	ShotLeftCount = shotLCount;
+
+	damage = dmg;
+
+	game::getInstance().weapons.insert(std::pair<string, Weapon>(name, *this));
 }
 
 void Weapon::setTexture(

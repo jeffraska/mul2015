@@ -1,5 +1,6 @@
 #include "AnimatedSprite.hpp"
 #include "Weapon.h"
+#include <SFML/Audio.hpp>
 
 #ifndef CHARACTER_H
 #define	CHARACTER_H
@@ -36,7 +37,7 @@ public:
 	};
 
 	Character();
-	void init(sf::Time frameTime = sf::seconds(0.2f), float speed = 15);
+	void init(sf::Time frameTime = sf::seconds(0.2f), float speed = 15, int lives = 100);
 	void setTexture(TextureType, Direction, const sf::Texture& texture, sf::IntRect, int);
 	void go(Direction);
 	void stop();
@@ -77,6 +78,8 @@ private:
 	sf::Time jumpFrameTime;
 	sf::Time jumpCurrentTime;
 	float jumpProgress;
+
+	sf::Sound shotSound;
 };
 
 #endif	/* CHARACTER_H */

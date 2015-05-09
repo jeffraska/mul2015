@@ -3,8 +3,10 @@
 #include <iostream>
 #include <cmath>
 
-Shot::Shot() {
+Shot::Shot(int dmg) {
 	refreshRate = sf::milliseconds(75);
+
+	damage = dmg;
 }
 
 void Shot::init(sf::Time frameTime, float speed) {
@@ -23,7 +25,7 @@ void Shot::setTexture(
 	Direction dir,
 	const sf::Texture& texture,
 	sf::IntRect rect, int count) {
-	Animation *anim = NULL;
+	Animation *anim = nullptr;
 
 	if (dir == dRight)
 		anim = &rightShot;
@@ -60,6 +62,8 @@ sf::Vector2f Shot::getPosition() {
 }
 
 void Shot::animate(sf::Time deltaTime) {
+	game &g = game::getInstance();
+
 	m_currentTime += deltaTime;
 	if (m_currentTime >= m_frameTime) {
 		m_currentTime = sf::microseconds(m_currentTime.asMicroseconds() % m_frameTime.asMicroseconds());
@@ -73,11 +77,73 @@ void Shot::animate(sf::Time deltaTime) {
 	}
 
 	sprite.update(deltaTime);
+
+	vector<Enemy>::iterator i;
+
+	for (i = g.enemies.begin(); i != g.enemies.end(); ++i)
+	{
+		if (hitTest(*i))
+		{
+			char scoreStr[10];
+
+			i->lives -= damage;
+			g.dollars += damage;
+
+			// new dollars text
+			sf::Text dollars;
+			dollars.setFont(g.fonts["Jose"]);
+			sprintf_s(scoreStr, 10, "%d", damage);
+			dollars.setString(scoreStr);
+			dollars.setColor(sf::Color::Black);
+			sf::Vector2f offset;
+			offset.x = i->sprite.getAnimation()->getFrame(0).width / 2;
+			offset.y = -60;
+			dollars.setPosition(i->getPosition() + offset);
+			dollars.setCharacterSize(72);
+
+			g.dollarsTexts.push_back(dollars);
+
+			if (i->lives <= 0)
+			{
+				i->holdFire();
+				i->stop();
+
+				// show explosion
+				AnimatedSprite as;
+				as.setPosition(
+					i->getPosition().x + ((i->sprite.getAnimation()->getFrame(0).width - g.explosionAnimation.getFrame(0).width) / 2),
+					i->getPosition().y + ((i->sprite.getAnimation()->getFrame(0).height - g.explosionAnimation.getFrame(0).height) / 2)
+				);
+				as.setAnimation(g.explosionAnimation);
+				as.setLooped(false);
+				as.setFrameTime(sf::milliseconds(75));
+				as.play();
+				g.explosions.push_back(as);
+
+				g.enemies.erase(i);
+			}
+
+			destroyShot();
+			return;
+		}
+	}
+
 	if (totalDistance > maxDistance)
 	{
-		game &g = game::getInstance();
-		vector<Shot*>::iterator  s = find(g.shots.begin(), g.shots.end(), this);
-		g.shots.erase(s);
-		delete this;
+		destroyShot();
 	}
+}
+
+bool Shot::hitTest(Character c)
+{
+	return (position.x >= c.getPosition().x && position.x <= c.getPosition().x + c.sprite.getAnimation()->getFrame(0).width &&
+		position.y >= c.getPosition().y && position.y <= c.getPosition().y + c.sprite.getAnimation()->getFrame(0).height);
+}
+
+void Shot::destroyShot()
+{
+	game &g = game::getInstance();
+	vector<Shot*>::iterator  s = find(g.shots.begin(), g.shots.end(), this);
+	g.shots.erase(s);
+	delete this;
 }

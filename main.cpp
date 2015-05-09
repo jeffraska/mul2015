@@ -1,4 +1,3 @@
-#include <cstdlib>
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -50,12 +49,13 @@ void renderThread() {
 	fire.setDissolve();
 
 	sf::Time interestRateTime;
+	sf::Time dollarsTextsTime;
 	sf::Time a;
 
 	// scrolling map view
 	gameView = window.getView();
 	fixedView = window.getView();
-	gameView.move(-500, 0);
+	//gameView.move(-500, 0);
 	window.setView(gameView);
 
 	// GUI
@@ -77,7 +77,11 @@ void renderThread() {
 		// animate
 		g.player.animate(frameTime, 500);
 		fire.update(static_cast<float>(20) / 1000);
-		for (int i = 0; i < g.shots.size(); i++)
+		for (auto i = 0; i < g.enemies.size(); i++)
+		{
+			g.enemies[i].animate(frameTime, 500);
+		}
+		for (auto i = 0; i < g.shots.size(); i++)
 		{
 			g.shots[i]->animate(frameTime);
 		}
@@ -128,6 +132,13 @@ void renderThread() {
 
 		window.draw(fire);
 
+		// Draw enemies
+		for (int i = 0; i < g.enemies.size(); i++)
+		{
+			window.draw(g.enemies[i].sprite);
+		}
+
+		// Draw Player
 #pragma region
 		if (g.player.getDirection() == Character::dRight) {
 			window.draw(g.player.sprite);
@@ -138,13 +149,45 @@ void renderThread() {
 			window.draw(g.player.sprite);
 		}
 #pragma endregion player sprite
-		/*
-			vykreslit nepøátele
-			*/
-
+	
+		// Draw Shots
 		for (int i = 0; i < g.shots.size(); i++)
 		{
 			window.draw(g.shots[i]->sprite);
+		}
+
+		// animate dolars texts
+		dollarsTextsTime += frameTime;
+		if (dollarsTextsTime.asMilliseconds() > 20)
+		{
+			dollarsTextsTime = sf::microseconds(dollarsTextsTime.asMicroseconds() % frameTime.asMicroseconds());
+
+			for (vector<sf::Text>::iterator i = g.dollarsTexts.begin(); i != g.dollarsTexts.end(); ++i)
+			{
+				i->setPosition(i->getPosition() + sf::Vector2f(0, -10));
+				i->setScale(i->getScale() + sf::Vector2f(0.1, 0.1));
+				sf::Color c = i->getColor();
+				c.a -= 15;	// 255 musí mýt dìlitelné tímto èíslem
+				i->setColor(c);
+				if (c.a == 0)
+				{
+					g.dollarsTexts.erase(i);
+					--i;
+				}
+			}
+		}
+
+		// render dollar texts
+		for (int i = 0; i < g.dollarsTexts.size(); i++)
+		{
+			window.draw(g.dollarsTexts[i]);
+		}
+
+		// render explosions
+		for (vector<AnimatedSprite>::iterator i = g.explosions.begin(); i != g.explosions.end(); ++i)
+		{
+			i->update(frameTime);
+			window.draw(*i);
 		}
 
 		// Draw GUI
@@ -187,7 +230,7 @@ int main(int argc, char** argv) {
 	window.setActive(false);
 	game &g = game::getInstance();
 
-	sf::Sound shotSound;
+	//sf::Sound shotSound;
 	sf::Sound stepSound;
 	sf::Sound explosionSound;
 	sf::Sound gunloadSound;
@@ -196,17 +239,23 @@ int main(int argc, char** argv) {
 	sf::Thread renderThread(&renderThread);
 	renderThread.launch();
 
-	// init player sprite
+	// init character sprites
 	g.player.init(sf::milliseconds(10), 10);
+	g.tankTemplate.init(sf::milliseconds(10), 5, 1000);
 
 	g.player.setPosition(
-		sf::VideoMode::getDesktopMode().width / 2 - 100,
+		50,
+		//sf::VideoMode::getDesktopMode().width / 2 - 100,
 		sf::VideoMode::getDesktopMode().height / 2 - 125
 		);
 
+	g.tankTemplate.go(Character::dLeft);
+	//g.tankTemplate.stop();
+	//g.tankTemplate.fire();
+
+	g.newEnemy(1500, 300);
+
 	// prepare sounds
-	shotSound.setBuffer(g.sounds[g.player.weapon.name]);
-	shotSound.setVolume(50);
 	stepSound.setBuffer(g.sounds["step"]);
 	explosionSound.setBuffer(g.sounds["explosion"]);
 	gunloadSound.setBuffer(g.sounds["gunload"]);
@@ -246,8 +295,6 @@ int main(int argc, char** argv) {
 				}
 				if (event.key.code == sf::Keyboard::LControl) {
 					g.player.fire();
-					shotSound.setLoop(true);
-					shotSound.play();
 				}
 				if (event.key.code == sf::Keyboard::Up)
 				{
@@ -259,24 +306,10 @@ int main(int argc, char** argv) {
 				if (event.key.code == sf::Keyboard::F1) {
 					g.player.setWeapon(g.weapons["machinegun"]);
 					gunloadSound.play();
-					if (shotSound.getStatus() == sf::Sound::Playing) {
-						shotSound.setBuffer(g.sounds[g.player.weapon.name]);
-						shotSound.play();
-					}
-					else {
-						shotSound.setBuffer(g.sounds[g.player.weapon.name]);
-					}
 				}
 				if (event.key.code == sf::Keyboard::F2) {
 					g.player.setWeapon(g.weapons["laser"]);
 					gunloadSound.play();
-					if (shotSound.getStatus() == sf::Sound::Playing) {
-						shotSound.setBuffer(g.sounds[g.player.weapon.name]);
-						shotSound.play();
-					}
-					else {
-						shotSound.setBuffer(g.sounds[g.player.weapon.name]);
-					}
 				}
 				break;
 			case sf::Event::KeyReleased:
@@ -292,12 +325,7 @@ int main(int argc, char** argv) {
 				}
 				if (event.key.code == sf::Keyboard::LControl) {
 					g.player.holdFire();
-					shotSound.setLoop(false);
 				}
-				break;
-			case sf::Event::Resized:
-				/*gameView.setSize(event.size.width, event.size.height);
-				fixedView.setSize(event.size.width, event.size.height);*/
 				break;
 			}
 		}

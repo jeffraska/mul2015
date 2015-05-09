@@ -2,6 +2,7 @@
 
 #ifndef SHOT_H
 #define	SHOT_H
+#include "Character.h"
 
 class Shot {
 public:
@@ -10,7 +11,7 @@ public:
 		dRight
 	};
 
-	Shot();
+	Shot(int);
 	void init(sf::Time frameTime = sf::seconds(0.2f), float speed = 15);
 	void setTexture(Direction, const sf::Texture& texture, sf::IntRect, int);
 	void go(Direction);
@@ -19,7 +20,7 @@ public:
 	void setPosition(const sf::Vector2f&);
 	sf::Vector2f getPosition();
 	void animate(sf::Time t);
-	void move(float x);
+	bool hitTest(Character c);
 
 	AnimatedSprite sprite;
 
@@ -27,6 +28,8 @@ public:
 	Animation leftShot;
 	float maxDistance;
 private:
+	void destroyShot();
+
 	Direction direction;
 
 	sf::Vector2f position;
@@ -36,6 +39,8 @@ private:
 	float shotSpeed;
 	sf::Time refreshRate;
 	float totalDistance;
+
+	int damage;
 };
 
 #endif	/* CHARACTER_H */
