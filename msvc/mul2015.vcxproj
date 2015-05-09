@@ -91,6 +91,7 @@
     <ClInclude Include="..\include\AnimatedSprite.hpp" />
     <ClInclude Include="..\include\Animation.hpp" />
     <ClInclude Include="..\include\Character.h" />
+    <ClInclude Include="..\include\Enemy.h" />
     <ClInclude Include="..\include\game.h" />
     <ClInclude Include="..\include\Particle.h" />
     <ClInclude Include="..\include\Player.h" />

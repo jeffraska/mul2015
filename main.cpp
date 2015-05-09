@@ -75,7 +75,7 @@ void renderThread() {
 		sf::Time frameTime = frameClock.restart();
 
 		// animate
-		g.player.animate(frameTime);
+		g.player.animate(frameTime, 500);
 		fire.update(static_cast<float>(20) / 1000);
 		for (int i = 0; i < g.shots.size(); i++)
 		{
@@ -152,7 +152,17 @@ void renderThread() {
 
 		window.setView(fixedView);
 
-		sprintf_s(scoreStr, 10, "$%05d", static_cast<int>(g.dollars));
+		if (g.dollars < -9999999)
+		{
+			sprintf_s(scoreStr, 10, "$    -moc");
+		} else if (g.dollars > 99999999)
+		{
+			sprintf_s(scoreStr, 10, "$     moc");
+		}
+		else
+		{
+			sprintf_s(scoreStr, 10, "$%8d", static_cast<int>(g.dollars));
+		}
 		score.setString(scoreStr);
 		window.draw(score);
 
@@ -187,7 +197,7 @@ int main(int argc, char** argv) {
 	renderThread.launch();
 
 	// init player sprite
-	g.player.init(sf::milliseconds(10), 5);
+	g.player.init(sf::milliseconds(10), 10);
 
 	g.player.setPosition(
 		sf::VideoMode::getDesktopMode().width / 2 - 100,
@@ -218,6 +228,12 @@ int main(int argc, char** argv) {
 				window.close();
 				break;
 			case sf::Event::KeyPressed:
+				if (event.key.code == sf::Keyboard::Escape)
+				{
+					doLoop = false;
+					window.close();
+					break;
+				}
 				if (event.key.code == sf::Keyboard::Right) {
 					g.player.go(Character::dRight);
 					stepSound.setLoop(true);
@@ -232,6 +248,10 @@ int main(int argc, char** argv) {
 					g.player.fire();
 					shotSound.setLoop(true);
 					shotSound.play();
+				}
+				if (event.key.code == sf::Keyboard::Up)
+				{
+					g.player.jump();
 				}
 				if (event.key.code == sf::Keyboard::Space) {
 					explosionSound.play();

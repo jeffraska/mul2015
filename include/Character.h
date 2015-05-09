@@ -23,6 +23,13 @@ public:
 		wWalk
 	};
 
+	enum JumpStatus
+	{
+		jNone,
+		jJump,
+		jFall
+	};
+
 	enum FireStatus {
 		fHold,
 		fFire
@@ -37,12 +44,12 @@ public:
 	void setWeapon(Weapon);
 
 	void fire();
+	void jump();
 	void holdFire();
 	void setPosition(float x, float y);
 	void setPosition(const sf::Vector2f&);
 	sf::Vector2f getPosition();
-	void animate(sf::Time t);
-	void move(float x);
+	void animate(sf::Time t, float groundY);
 
 	Direction getDirection() {
 		return direction;
@@ -58,6 +65,7 @@ private:
 	Direction direction;
 	WalkStatus wStatus;
 	FireStatus fStatus;
+	JumpStatus jStatus;
 
 	sf::Vector2f position;
 
@@ -65,6 +73,10 @@ private:
 	sf::Time m_currentTime;
 	float characterSpeed;
 	sf::Time refreshRate;
+
+	sf::Time jumpFrameTime;
+	sf::Time jumpCurrentTime;
+	float jumpProgress;
 };
 
 #endif	/* CHARACTER_H */

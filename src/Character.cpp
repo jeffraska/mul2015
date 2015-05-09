@@ -1,6 +1,8 @@
+#define _USE_MATH_DEFINES
+
 #include "Character.h"
 #include "game.h"
-#include <typeinfo>
+#include <cmath>
 
 Character::Character() {
 	refreshRate = sf::milliseconds(75);
@@ -24,6 +26,9 @@ void Character::init(sf::Time frameTime, float speed) {
 
 	m_frameTime = frameTime;
 	characterSpeed = speed;
+
+	jumpFrameTime = sf::milliseconds(10);
+	jStatus = jFall;
 
 	lives = 100;
 }
@@ -114,6 +119,16 @@ void Character::fire() {
 		weapon.sprite.play(weapon.gunLeftFire);
 }
 
+void Character::jump()
+{
+	if (jStatus != jJump)
+	{ 
+		jStatus = jJump;
+		jumpCurrentTime = sf::Time::Zero;
+		jumpProgress = 0;
+	}
+}
+
 void Character::holdFire() {
 	fStatus = fHold;
 	weapon.m_currentTime = weapon.m_frameTime;
@@ -158,7 +173,7 @@ sf::Vector2f Character::getPosition() {
 	return position;
 }
 
-void Character::animate(sf::Time deltaTime) {
+void Character::animate(sf::Time deltaTime, float groundY) {
 	if (wStatus == wWalk) {
 		m_currentTime += deltaTime;
 		if (m_currentTime >= m_frameTime) {
@@ -200,6 +215,42 @@ void Character::animate(sf::Time deltaTime) {
 			g.shots.push_back(s);
 
 			g.dollars -= weapon.shotPrice;
+		}
+	}
+
+	if (jStatus != jNone)
+	{
+		jumpCurrentTime += deltaTime;
+		if (jumpCurrentTime >= jumpFrameTime)
+		{
+			jumpCurrentTime = sf::microseconds(jumpCurrentTime.asMicroseconds() % jumpFrameTime.asMicroseconds());
+
+			float newY = position.y;
+
+			if (jStatus == jJump)
+			{
+				jumpProgress += 5;
+
+				newY -= 30*sin(jumpProgress * M_PI / 180);
+
+				if (jumpProgress >= 90)	// end of jump on plane
+				{
+					jumpProgress = 0;
+					jStatus = jFall;
+				}
+			} else if (jStatus == jFall)
+			{
+				newY += 20;
+
+				if (newY > groundY)
+				{
+					newY = groundY;
+					jumpProgress = 0;
+					//jStatus = jNone;
+				}
+			}
+
+			setPosition(position.x, newY);
 		}
 	}
 
