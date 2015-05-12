@@ -269,6 +269,7 @@ int main(int argc, char** argv) {
 	// main loop
 	sf::Event event;
 	bool doLoop = true;
+	float globalPos = (window.getSize().x);
 
 	while (window.isOpen()) {
 		if (window.waitEvent(event)) {
@@ -285,14 +286,30 @@ int main(int argc, char** argv) {
 					break;
 				}
 				if (event.key.code == sf::Keyboard::Right) {
-					g.player.go(Character::dRight);
-					stepSound.setLoop(true);
-					stepSound.play();
+					if (stepSound.getLoop() != true){
+						g.player.go(Character::dRight);
+						stepSound.setLoop(true);
+						stepSound.play();
+					}
+					
+					window.setKeyRepeatEnabled(true);
+					if (g.player.getPosition().x > globalPos){
+						gameView.move((window.getSize().x), 0);
+						globalPos = g.player.getPosition().x + window.getSize().x;
+					}
 				}
 				if (event.key.code == sf::Keyboard::Left) {
-					g.player.go(Character::dLeft);
-					stepSound.setLoop(true);
-					stepSound.play();
+					window.setKeyRepeatEnabled(true);
+					if (g.player.getPosition().x > (globalPos - window.getSize().x)){
+						if (stepSound.getLoop() != true){
+							g.player.go(Character::dLeft);
+							stepSound.setLoop(true);
+							stepSound.play();
+						}
+					}
+					else {
+						g.player.stop();
+					}
 				}
 				if (event.key.code == sf::Keyboard::LControl) {
 					g.player.fire();
@@ -316,11 +333,13 @@ int main(int argc, char** argv) {
 					g.player.getDirection() == Character::dRight) {
 					g.player.stop();
 					stepSound.setLoop(false);
+					window.setKeyRepeatEnabled(false);
 				}
 				if (event.key.code == sf::Keyboard::Left &&
 					g.player.getDirection() == Character::dLeft) {
 					g.player.stop();
 					stepSound.setLoop(false);
+					window.setKeyRepeatEnabled(false);
 				}
 				if (event.key.code == sf::Keyboard::LControl) {
 					g.player.holdFire();
@@ -328,6 +347,8 @@ int main(int argc, char** argv) {
 				break;
 			}
 		}
+
+		
 	}
 
 	// wait to terminate render thread
