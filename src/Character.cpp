@@ -237,9 +237,9 @@ void Character::animate(sf::Time deltaTime, float groundY) {
 			{
 				jumpProgress += 5;
 
-				newY -= 30*sin(jumpProgress * M_PI / 180);
+				newY -= 25*sin(jumpProgress * M_PI / 180);
 
-				if (jumpProgress >= 90)	// end of jump on plane
+				if (jumpProgress >= 150)	// end of jump on plane
 				{
 					jumpProgress = 0;
 					jStatus = jFall;

@@ -13,7 +13,7 @@ void renderThread() {
 	game &g = game::getInstance();
 
 	sf::Text score;
-	sf::Text lives;
+	
 
 	/*vector<int> terrain;
 	terrain.push_back(0);
@@ -71,7 +71,10 @@ void renderThread() {
 	lives.setPosition(fixedView.getCenter().x - (lives.getLocalBounds().width), 0);
 	lives.setCharacterSize(72);
 
-	float ground = 600;
+	float ground = 800;
+	
+	//generate ground
+	g.genGround(window.getSize(),1);
 
 	while (window.isOpen()) {
 		sf::Time frameTime = frameClock.restart();
@@ -152,6 +155,11 @@ void renderThread() {
 		}
 #pragma endregion player sprite
 	
+		// Draw Ground
+		for (int k = 0; k < g.ground.size(); k++){
+			window.draw(g.ground[k].sprite);
+		}
+
 		// Draw Shots
 		for (int i = 0; i < g.shots.size(); i++)
 		{
@@ -231,6 +239,7 @@ int main(int argc, char** argv) {
 	window.setKeyRepeatEnabled(false);
 	window.setActive(false);
 	game &g = game::getInstance();
+	
 
 	//sf::Sound shotSound;
 	sf::Sound stepSound;
@@ -244,6 +253,7 @@ int main(int argc, char** argv) {
 	// init character sprites
 	g.player.init(sf::milliseconds(10), 10);
 	g.tankTemplate.init(sf::milliseconds(10), 5, 1000);
+	
 
 	g.player.setPosition(
 		50,
@@ -255,14 +265,11 @@ int main(int argc, char** argv) {
 	//g.tankTemplate.stop();
 	//g.tankTemplate.fire();
 
-	g.newEnemy(1500, 300);
-	g.newEnemy(3500, 300);
-	g.newEnemy(4000, 300);
+	g.newEnemy(1500, 500);
+	g.newEnemy(3500, 500);
+	g.newEnemy(4000, 500);
 	
-	//generate Ground
-	lastPosition.x = 0;
-	lastPosition.y = 300;
-	lastPosition = g.genGround(lastPosition, window.getSize());
+	
 
 	// prepare sounds
 	stepSound.setBuffer(g.sounds["step"]);
@@ -276,7 +283,8 @@ int main(int argc, char** argv) {
 	// main loop
 	sf::Event event;
 	bool doLoop = true;
-	float globalPos = (window.getSize().x);
+	float endPos = (window.getSize().x);
+	float startPos = 0.;
 	int collision = 0;
 
 	while (window.isOpen()) {
@@ -301,46 +309,74 @@ int main(int argc, char** argv) {
 						stepSound.play();
 					}
 					
-					if (g.player.getPosition().x > globalPos){
+					if (g.player.getPosition().x > endPos){
 						gameView.move((window.getSize().x), 0);
-						globalPos = g.player.getPosition().x + window.getSize().x;
-						lastPosition = g.genGround(lastPosition, window.getSize());
+						startPos = endPos;
+						endPos = g.player.getPosition().x + window.getSize().x;
+						g.genGround(window.getSize(), 1);
+
+						for (int k = 0; k < g.ground.size(); k++){
+							window.draw(g.ground.at(k).sprite);
+						}
 					}
 
-					collision = g.groundCollision(g.player.getPosition());
+					collision = g.groundCollision(g.player.getPosition(), 1);
 					switch (collision){
 					case 1: //rovina
 						break;
 					case 2: //prekazka
-						g.player.stop();
-						stepSound.setLoop(false);
-						window.setKeyRepeatEnabled(false);
+						if (g.barrier){
+							g.player.stop();
+							stepSound.setLoop(false);
+							window.setKeyRepeatEnabled(false);
+							break;
+						}
+					case 3: //fire
+						if (g.barrier == true){
+							g.player.lives--;
+						}
 						break;
-					default://dira
+					/*default://dira
 						g.player.setPosition(g.player.getPosition().x, collision);
-						break;
+						break;*/
 					}
 				}
 				if (event.key.code == sf::Keyboard::Left) {
 					window.setKeyRepeatEnabled(true);
-					if (g.player.getPosition().x > (globalPos - window.getSize().x)){
-						if (stepSound.getLoop() != true){
-							g.player.go(Character::dLeft);
-							stepSound.setLoop(true);
-							stepSound.play();
-						}
+					if (stepSound.getLoop() != true){
+						g.player.go(Character::dLeft);
+						stepSound.setLoop(true);
+						stepSound.play();
+					}
 
-						collision = g.groundCollision(g.player.getPosition());
-						if (collision == true){
+					if (g.player.getPosition().x < startPos){
+						int offset = window.getSize().x;
+						gameView.move(offset*-1, 0);
+						endPos = startPos;
+						startPos = g.player.getPosition().x - window.getSize().x;
+						g.genGround(window.getSize(), -1);
+
+						for (int k = 0; k < g.ground.size(); k++){
+							window.draw(g.ground.at(k).sprite);
+						}
+					}
+
+					collision = g.groundCollision(g.player.getPosition(), -1);
+					switch (collision){
+					case 1: //rovina
+						break;
+					case 2: //prekazka
+						if (g.barrier){
 							g.player.stop();
 							stepSound.setLoop(false);
 							window.setKeyRepeatEnabled(false);
+							break;
 						}
-					}
-					else {
-						g.player.stop();
-						stepSound.setLoop(false);
-						window.setKeyRepeatEnabled(false);
+					case 3: //fire
+						if (g.barrier == true){
+							g.player.lives--;
+						}
+						break;
 					}
 				}
 				if (event.key.code == sf::Keyboard::LControl) {
@@ -365,12 +401,53 @@ int main(int argc, char** argv) {
 					g.player.getDirection() == Character::dRight) {
 					g.player.stop();
 					stepSound.setLoop(false);
+
+					collision = g.groundCollision(g.player.getPosition(),1);
+					switch (collision){
+					case 1: //rovina
+						break;
+					case 2: //prekazka
+						if (g.barrier){
+							g.player.stop();
+							stepSound.setLoop(false);
+							window.setKeyRepeatEnabled(false);
+							break;
+						}
+					case 3: //fire
+						if (g.barrier == true){
+							g.player.lives--;
+						}
+						break;
+					}
 					window.setKeyRepeatEnabled(false);
 				}
 				if (event.key.code == sf::Keyboard::Left &&
 					g.player.getDirection() == Character::dLeft) {
 					g.player.stop();
 					stepSound.setLoop(false);
+
+					collision = g.groundCollision(g.player.getPosition(), -1);
+					switch (collision){
+					case 1: //rovina
+						break;
+					case 2: //prekazka
+						if (g.barrier){
+							g.player.stop();
+							stepSound.setLoop(false);
+							window.setKeyRepeatEnabled(false);
+							break;
+						}
+					case 3: //fire
+						if (g.barrier == true){
+							g.player.lives--;
+						}
+						break;
+					case 4: // flower
+						if (g.barrier == true){
+							g.player.lives++;
+						}
+						break;
+					}
 					window.setKeyRepeatEnabled(false);
 				}
 				if (event.key.code == sf::Keyboard::LControl) {
@@ -379,8 +456,6 @@ int main(int argc, char** argv) {
 				break;
 			}
 		}
-
-		
 	}
 
 	// wait to terminate render thread

@@ -1,6 +1,7 @@
 #include <dirent.h>
 #include <iostream>
 #include "game.h"
+#include "GroundPanel.h"
 
 // sf::Music and sf::SoundBuffer must be created separately in different threads
 sf::Mutex OpenALMutex;
@@ -146,8 +147,8 @@ void game::newEnemy(float x, float y)
 	enemies.back().setPosition(x, y);
 }
 
-sf::Vector2i game::genGround(sf::Vector2i lastPosition, sf::Vector2u windowSize){
-	int newX = lastPosition.x;
+void game::genGround(sf::Vector2u windowSize, int direction){
+	/*int newX = lastPosition.x;
 	int genY;
 	int genX;
 
@@ -165,15 +166,67 @@ sf::Vector2i game::genGround(sf::Vector2i lastPosition, sf::Vector2u windowSize)
 		newX += genX;
 		ground.push_back( sf::Vector2i(newX, genY));
 	}
-	return ground.at(ground.size()-1);
+	return ground.at(ground.size()-1);*/
+
+	int j = windowSize.x / 300;
+	j++;
+	int genTexType;
+	sf::Vector2f lastPosition;
+
+
+	for (int i = 0; i < j; i++){
+		GroundPanel panel;
+		genTexType = randomGenerator();
+
+		if (i == 0){
+			if (ground.size() == 0){
+				lastPosition.x = 0;
+				lastPosition.y = 740;
+				panel.init(lastPosition, genTexType);
+			}
+			else if (direction == -1){
+				lastPosition = ground.at(0).getPosition();
+				ground.clear();
+				panel.init(sf::Vector2f(lastPosition.x , lastPosition.y), genTexType);
+			}
+			else {
+				lastPosition = ground.at(ground.size() - 1).getPosition();
+				ground.clear();
+				panel.init(sf::Vector2f(lastPosition.x, lastPosition.y), genTexType);
+			}
+		}
+		else {
+			panel.init(sf::Vector2f(lastPosition.x + (direction *300), lastPosition.y), genTexType);
+		}
+		
+		panel.sprite.setTexture(textures["ground" + panel.getSType()]);
+		panel.sprite.setPosition(panel.getPosition());
+		lastPosition = panel.position;
+		ground.push_back(panel);
+	}
+}
+
+int game::randomGenerator(){
+	double val = (double)rand() / RAND_MAX;
+
+	if (val < 0.6)       //  floor 60%
+		return 3;
+	else if (val < 0.7)  //  10%
+		return 1;
+	else if (val < 0.8)  //  10%
+		return 2;
+	else if (val < 0.9)  //  10%
+		return 4;
+	else
+		return 5;  //  10%
 }
 
 void createGround(){
 
 }
 
-int game::groundCollision(sf::Vector2f playerPosition){
-	for (int i = 0; i < ground.size(); i++){
+int game::groundCollision(sf::Vector2f playerPosition, int direction){
+	/*for (int i = 0; i < ground.size(); i++){
 		//dodelat
 		if (playerPosition.x = ground.at(i).x){ //narazim na zmenu terenu
 			if (playerPosition.y < ground.at(i).y){//prekazka
@@ -184,9 +237,56 @@ int game::groundCollision(sf::Vector2f playerPosition){
 			}
 		}
 		return 1; //rovina
+	}*/
+	GroundPanel panel;
+
+	for (int i = 0; i < ground.size()-1; i++){
+		if (direction == 1){
+			if (playerPosition.x + player.sprite.getAnimation()->getFrame(0).width > ground[i].getPosition().x  &&
+				playerPosition.x + player.sprite.getAnimation()->getFrame(0).width < ground[i + 1].getPosition().x){
+				panel = ground[i];
+			}
+			else if (i == (ground.size() - 2)){
+				panel = ground[i + 1];
+			}
+		}
+		else {
+			if (playerPosition.x + player.sprite.getAnimation()->getFrame(0).width > ground[i].getPosition().x  &&
+				playerPosition.x < ground[i + 1].getPosition().x){
+				panel = ground[i];
+			}
+			else if (i == (ground.size() - 2)){
+				panel = ground[i + 1];
+			}
+		}
+		
+
+		switch (panel.getType()) {
+		case 1: //barrier
+		case 2: //barrier
+			if ((playerPosition.y + player.sprite.getAnimation()->getFrame(0).height) == (panel.getPosition().y + 60))
+				barrier = true;
+			else
+				barrier = false;
+			///DODELAT ZATARAS
+			return 2;
+		case 3: //ground
+			barrier = false;
+			return 1;
+		case 4: //fire
+			if ((playerPosition.y + player.sprite.getAnimation()->getFrame(0).height) == (panel.getPosition().y + 60))
+				barrier = true;
+			else 
+				barrier = false;
+			return 3;
+		case 5: //flower
+			if ((playerPosition.y + player.sprite.getAnimation()->getFrame(0).height) == (panel.getPosition().y + 60))
+				barrier = true;
+			else
+				barrier = false;
+			return 4;
+		}
 	}
-	
-	
 }
 
 map<string, string> game::getFiles(string dir, string filetype) {

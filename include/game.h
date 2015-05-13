@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Shot.h"
+#include "GroundPanel.h"
 
 #ifndef GAME_H
 #define	GAME_H
@@ -33,13 +34,15 @@ public:
 	vector<Enemy> enemies;
 	vector<sf::Text> dollarsTexts;
 	vector<AnimatedSprite> explosions;
-	vector<sf::Vector2i> ground;
+	vector<GroundPanel> ground;
 	sf::Vector2i position;
+	bool barrier;
 
 	float dollars;
 	void newEnemy(float, float);
-	sf::Vector2i genGround(sf::Vector2i, sf::Vector2u);
-	int groundCollision(sf::Vector2f);
+	void genGround(sf::Vector2u, int);
+	int groundCollision(sf::Vector2f, int);
+	int randomGenerator();
 
 	Player player;
 	Enemy tankTemplate;
