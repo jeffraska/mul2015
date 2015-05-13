@@ -33,9 +33,13 @@ public:
 	vector<Enemy> enemies;
 	vector<sf::Text> dollarsTexts;
 	vector<AnimatedSprite> explosions;
+	vector<sf::Vector2i> ground;
+	sf::Vector2i position;
 
 	float dollars;
 	void newEnemy(float, float);
+	sf::Vector2i genGround(sf::Vector2i, sf::Vector2u);
+	int groundCollision(sf::Vector2f);
 
 	Player player;
 	Enemy tankTemplate;

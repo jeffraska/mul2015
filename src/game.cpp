@@ -146,6 +146,49 @@ void game::newEnemy(float x, float y)
 	enemies.back().setPosition(x, y);
 }
 
+sf::Vector2i game::genGround(sf::Vector2i lastPosition, sf::Vector2u windowSize){
+	int newX = lastPosition.x;
+	int genY;
+	int genX;
+
+	// clear
+	ground.clear();
+	//last position
+	ground.push_back(lastPosition);
+
+	//generate new positions
+	for (int i = 0; i < windowSize.x; i += genX){
+		genY = rand() % (windowSize.y ) - 10;
+		genX = rand() % (windowSize.x / 2) - 50;
+
+		ground.push_back(sf::Vector2i(newX, genY));
+		newX += genX;
+		ground.push_back( sf::Vector2i(newX, genY));
+	}
+	return ground.at(ground.size()-1);
+}
+
+void createGround(){
+
+}
+
+int game::groundCollision(sf::Vector2f playerPosition){
+	for (int i = 0; i < ground.size(); i++){
+		//dodelat
+		if (playerPosition.x = ground.at(i).x){ //narazim na zmenu terenu
+			if (playerPosition.y < ground.at(i).y){//prekazka
+				return 2;
+			}
+			else if (playerPosition.y > ground.at(i).y){ // dira
+				return ground.at(i).y;
+			}
+		}
+		return 1; //rovina
+	}
+	
+	
+}
+
 map<string, string> game::getFiles(string dir, string filetype) {
 	map<string, string> files;
 

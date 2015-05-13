@@ -11,4 +11,6 @@ sf::RenderWindow window;
 sf::View gameView;
 sf::View fixedView;
 
+sf::Vector2i lastPosition;
+
 #endif	/* MAIN_H */

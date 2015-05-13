@@ -256,6 +256,13 @@ int main(int argc, char** argv) {
 	//g.tankTemplate.fire();
 
 	g.newEnemy(1500, 300);
+	g.newEnemy(3500, 300);
+	g.newEnemy(4000, 300);
+	
+	//generate Ground
+	lastPosition.x = 0;
+	lastPosition.y = 300;
+	lastPosition = g.genGround(lastPosition, window.getSize());
 
 	// prepare sounds
 	stepSound.setBuffer(g.sounds["step"]);
@@ -270,6 +277,7 @@ int main(int argc, char** argv) {
 	sf::Event event;
 	bool doLoop = true;
 	float globalPos = (window.getSize().x);
+	int collision = 0;
 
 	while (window.isOpen()) {
 		if (window.waitEvent(event)) {
@@ -286,16 +294,31 @@ int main(int argc, char** argv) {
 					break;
 				}
 				if (event.key.code == sf::Keyboard::Right) {
+					window.setKeyRepeatEnabled(true);
 					if (stepSound.getLoop() != true){
 						g.player.go(Character::dRight);
 						stepSound.setLoop(true);
 						stepSound.play();
 					}
 					
-					window.setKeyRepeatEnabled(true);
 					if (g.player.getPosition().x > globalPos){
 						gameView.move((window.getSize().x), 0);
 						globalPos = g.player.getPosition().x + window.getSize().x;
+						lastPosition = g.genGround(lastPosition, window.getSize());
+					}
+
+					collision = g.groundCollision(g.player.getPosition());
+					switch (collision){
+					case 1: //rovina
+						break;
+					case 2: //prekazka
+						g.player.stop();
+						stepSound.setLoop(false);
+						window.setKeyRepeatEnabled(false);
+						break;
+					default://dira
+						g.player.setPosition(g.player.getPosition().x, collision);
+						break;
 					}
 				}
 				if (event.key.code == sf::Keyboard::Left) {
@@ -306,9 +329,18 @@ int main(int argc, char** argv) {
 							stepSound.setLoop(true);
 							stepSound.play();
 						}
+
+						collision = g.groundCollision(g.player.getPosition());
+						if (collision == true){
+							g.player.stop();
+							stepSound.setLoop(false);
+							window.setKeyRepeatEnabled(false);
+						}
 					}
 					else {
 						g.player.stop();
+						stepSound.setLoop(false);
+						window.setKeyRepeatEnabled(false);
 					}
 				}
 				if (event.key.code == sf::Keyboard::LControl) {
