@@ -36,9 +36,9 @@ void renderThread() {
 	lives.setCharacterSize(72);
 
 	float ground = 800;
-	
+
 	//generate ground
-	g.genGround(window.getSize(),1);
+	g.genGround(window.getSize(), 1);
 
 	while (window.isOpen()) {
 		sf::Time frameTime = frameClock.restart();
@@ -46,16 +46,16 @@ void renderThread() {
 		// animate
 		g.player.animate(frameTime, ground);
 
-		if (g.player.getCenter().x > gameView.getCenter().x + gameView.getSize().x / 4){
+		/*if (g.player.getCenter().x > gameView.getCenter().x + gameView.getSize().x / 4){
 			gameView.move(gameView.getSize().x / 2, 0);
 			g.newEnemy(gameView.getCenter().x + gameView.getSize().x / 2, 625);
-		}
+			}
 
-		if (g.player.getCenter().x < gameView.getCenter().x - gameView.getSize().x / 2){
+			if (g.player.getCenter().x < gameView.getCenter().x - gameView.getSize().x / 2){
 			g.player.stop();
 			stepSound.setLoop(false);
 			//gameView.move(gameView.getSize().x / -2, 0);
-		}
+			}*/
 
 		for (auto i = 0; i < g.enemies.size(); i++)
 		{
@@ -86,7 +86,7 @@ void renderThread() {
 			window.draw(g.player.sprite);
 		}
 #pragma endregion player sprite
-	
+
 		// Draw Ground
 		for (int k = 0; k < g.ground.size(); k++){
 			window.draw(g.ground[k].sprite);
@@ -102,32 +102,32 @@ void renderThread() {
 		/*dollarsTextsTime += frameTime;
 		if (dollarsTextsTime.asMilliseconds() > 20)
 		{
-			dollarsTextsTime = sf::microseconds(dollarsTextsTime.asMicroseconds() % frameTime.asMicroseconds());
+		dollarsTextsTime = sf::microseconds(dollarsTextsTime.asMicroseconds() % frameTime.asMicroseconds());
 
-			for (vector<sf::Text>::iterator i = g.dollarsTexts.begin(); i != g.dollarsTexts.end(); ++i)
-			{
-				i->setPosition(i->getPosition() + sf::Vector2f(0, -10));
-				i->setScale(i->getScale() + sf::Vector2f(0.1, 0.1));
-				sf::Color c = i->getColor();
-				c.a -= 15;	// 255 musí mýt dìlitelné tímto èíslem
-				i->setColor(c);
-			}
+		for (vector<sf::Text>::iterator i = g.dollarsTexts.begin(); i != g.dollarsTexts.end(); ++i)
+		{
+		i->setPosition(i->getPosition() + sf::Vector2f(0, -10));
+		i->setScale(i->getScale() + sf::Vector2f(0.1, 0.1));
+		sf::Color c = i->getColor();
+		c.a -= 15;	// 255 musí mýt dìlitelné tímto èíslem
+		i->setColor(c);
+		}
 
-			for (vector<sf::Text>::iterator i = g.dollarsTexts.begin(); i != g.dollarsTexts.end(); ++i)
-			{
-				sf::Color c = i->getColor();
-				if (c.a == 0)
-				{
-					g.dollarsTexts.erase(i);
-					i = g.dollarsTexts.begin();
-				}
-			}
+		for (vector<sf::Text>::iterator i = g.dollarsTexts.begin(); i != g.dollarsTexts.end(); ++i)
+		{
+		sf::Color c = i->getColor();
+		if (c.a == 0)
+		{
+		g.dollarsTexts.erase(i);
+		i = g.dollarsTexts.begin();
+		}
+		}
 		}
 
 		// render dollar texts
 		for (int i = 0; i < g.dollarsTexts.size(); i++)
 		{
-			window.draw(g.dollarsTexts[i]);
+		window.draw(g.dollarsTexts[i]);
 		}*/
 
 		// render explosions
@@ -143,7 +143,7 @@ void renderThread() {
 			go.setFont(g.fonts["Jose"]);
 			go.setString("Game over");
 			go.setCharacterSize(72);
-			go.setPosition(gameView.getCenter().x - go.getLocalBounds().width/2, gameView.getCenter().y + go.getLocalBounds().height/2);
+			go.setPosition(gameView.getCenter().x - go.getLocalBounds().width / 2, gameView.getCenter().y + go.getLocalBounds().height / 2);
 			go.setColor(sf::Color::Black);
 			window.draw(go);
 		}
@@ -156,7 +156,8 @@ void renderThread() {
 		if (g.dollars < -9999999)
 		{
 			sprintf_s(scoreStr, 10, "$    -moc");
-		} else if (g.dollars > 99999999)
+		}
+		else if (g.dollars > 99999999)
 		{
 			sprintf_s(scoreStr, 10, "$     moc");
 		}
@@ -186,7 +187,6 @@ void initGame()
 	// init character sprites
 	g.player.init(sf::milliseconds(10), 10, 500);
 	g.tankTemplate.init(sf::milliseconds(10), 5, 1000);
-	
 
 	g.player.setPosition(
 		//50,
@@ -227,7 +227,7 @@ int main(int argc, char** argv) {
 	float endPos = (window.getSize().x);
 	float startPos = 0.;
 	int collision = 0;
-	
+
 	while (window.isOpen()) {
 		if (window.waitEvent(event)) {
 			switch (event.type) {
@@ -245,82 +245,82 @@ int main(int argc, char** argv) {
 				if (!g.gameOver)
 				{
 					if (event.key.code == sf::Keyboard::Right) {
-						/*window.setKeyRepeatEnabled(true);
-						if (stepSound.getLoop() != true){*/
-						g.player.go(Character::dRight);
-						stepSound.setLoop(true);
-						stepSound.play();
-						/*}
+						window.setKeyRepeatEnabled(true);
+						if (stepSound.getLoop() != true){
+							g.player.go(Character::dRight);
+							stepSound.setLoop(true);
+							stepSound.play();
+						}
 
-						if (g.player.getPosition().x > endPos-300){
-						gameView.move(500, 0);
-						endPos += 500;
-						startPos += 500;
-						cout << endl << startPos << endl << endPos << endl;
+						if (g.player.getPosition().x > endPos - 300){
+							gameView.move(500, 0);
+							endPos += 500;
+							startPos += 500;
+							cout << endl << startPos << endl << endPos << endl;
 						}
 
 						collision = g.groundCollision(g.player.getPosition(), 1);
 						switch (collision){
 						case 1: //ground
-						break;
+							break;
 						case 2: //barrier
-						if (g.barrier){
-						g.player.stop();
-						stepSound.setLoop(false);
-						window.setKeyRepeatEnabled(false);
-						break;
-						}
+							if (g.barrier){
+								g.player.stop();
+								stepSound.setLoop(false);
+								window.setKeyRepeatEnabled(false);
+								break;
+							}
 						case 3: //fire
-						if (g.barrier == true){
-						g.player.lives--;
-						}
-						break;
+							if (g.barrier == true){
+								g.player.lives--;
+							}
+							break;
 						case 4://flower
-						if (g.barrier == true){
-						//nejakej zvuk
+							if (g.barrier == true){
+								//nejakej zvuk
+							}
+							break;
+							/*default://dira
+							g.player.setPosition(g.player.getPosition().x, collision);
+							break;*/
 						}
-						break;*/
-						/*default://dira
-						g.player.setPosition(g.player.getPosition().x, collision);
-						break;
-						}*/
 					}
 					if (event.key.code == sf::Keyboard::Left) {
-						/*window.setKeyRepeatEnabled(true);
-						if (stepSound.getLoop() != true){*/
-						g.player.go(Character::dLeft);
-						stepSound.setLoop(true);
-						stepSound.play();
-						/*}
+						window.setKeyRepeatEnabled(true);
+						if (stepSound.getLoop() != true){
+							g.player.go(Character::dLeft);
+							stepSound.setLoop(true);
+							stepSound.play();
+						}
 
-						if (g.player.getPosition().x < startPos+300){
-						gameView.move(500*-1, 0);
-						endPos -= 500;
-						startPos -= 500;
+						if (g.player.getPosition().x < startPos + 300){
+							gameView.move(500 * -1, 0);
+							endPos -= 500;
+							startPos -= 500;
 						}
 
 						collision = g.groundCollision(g.player.getPosition(), -1);
 						switch (collision){
 						case 1: //rovina
-						break;
+							break;
 						case 2: //prekazka
-						if (g.barrier){
-						//g.player.stop();
-						//stepSound.setLoop(false);
-						//window.setKeyRepeatEnabled(false);
-						break;
-						}
+							if (g.barrier){
+								g.player.stop();
+								stepSound.setLoop(false);
+								window.setKeyRepeatEnabled(false);
+								break;
+							}
 						case 3: //fire
-						if (g.barrier == true){
-						g.player.lives--;
-						}
-						break;
+							if (g.barrier == true){
+								g.player.lives--;
+							}
+							break;
 						case 4://flower
-						if (g.barrier == true){
-						//nejakej zvuk
+							if (g.barrier == true){
+								//nejakej zvuk
+							}
+							break;
 						}
-						break;
-						}*/
 					}
 					if (event.key.code == sf::Keyboard::LControl) {
 						g.player.fire();
@@ -350,31 +350,31 @@ int main(int argc, char** argv) {
 						gameView.move(500, 0);
 						endPos += 500;
 						startPos += 500;
-					}
+						}
 
-					collision = g.groundCollision(g.player.getPosition(),1);
-					switch (collision){
-					case 1: //rovina
+						collision = g.groundCollision(g.player.getPosition(),1);
+						switch (collision){
+						case 1: //rovina
 						break;
-					case 2: //prekazka
+						case 2: //prekazka
 						if (g.barrier){
-							g.player.stop();
-							stepSound.setLoop(false);
-							window.setKeyRepeatEnabled(false);
-							break;
+						g.player.stop();
+						stepSound.setLoop(false);
+						window.setKeyRepeatEnabled(false);
+						break;
 						}
-					case 3: //fire
+						case 3: //fire
 						if (g.barrier == true){
-							g.player.lives--;
+						g.player.lives--;
 						}
 						break;
-					case 4://flower
+						case 4://flower
 						if (g.barrier == true){
-							//nejakej zvuk
+						//nejakej zvuk
 						}
 						break;
-					}
-					window.setKeyRepeatEnabled(false);*/
+						}
+						window.setKeyRepeatEnabled(false);*/
 				}
 				if (event.key.code == sf::Keyboard::Left &&
 					g.player.getDirection() == Character::dLeft) {
@@ -385,31 +385,31 @@ int main(int argc, char** argv) {
 						gameView.move(500 * -1, 0);
 						endPos -= 500;
 						startPos -= 500;
-					}
+						}
 
-					collision = g.groundCollision(g.player.getPosition(), -1);
-					switch (collision){
-					case 1: //rovina
+						collision = g.groundCollision(g.player.getPosition(), -1);
+						switch (collision){
+						case 1: //rovina
 						break;
-					case 2: //prekazka
+						case 2: //prekazka
 						if (g.barrier){
-							g.player.stop();
-							stepSound.setLoop(false);
-							window.setKeyRepeatEnabled(false);
-							break;
+						g.player.stop();
+						stepSound.setLoop(false);
+						window.setKeyRepeatEnabled(false);
+						break;
 						}
-					case 3: //fire
+						case 3: //fire
 						if (g.barrier == true){
-							g.player.lives--;
+						g.player.lives--;
 						}
 						break;
-					case 4: // flower
+						case 4: // flower
 						if (g.barrier == true){
-							//nejakej zvuk
+						//nejakej zvuk
 						}
 						break;
-					}
-					window.setKeyRepeatEnabled(false);*/
+						}
+						window.setKeyRepeatEnabled(false);*/
 				}
 				if (event.key.code == sf::Keyboard::LControl) {
 					g.player.holdFire();
