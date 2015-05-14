@@ -8,6 +8,11 @@ Character::Character() {
 	refreshRate = sf::milliseconds(75);
 }
 
+Character::~Character()
+{
+	//shotSound.stop();
+}
+
 void Character::init(sf::Time frameTime, float speed, int lives) {
 	direction = dRight;
 	wStatus = wStop;
@@ -206,7 +211,7 @@ void Character::animate(sf::Time deltaTime, float groundY) {
 			weapon.m_currentTime = sf::microseconds(weapon.m_currentTime.asMicroseconds() % weapon.m_frameTime.asMicroseconds());
 
 			game &g = game::getInstance();
-			Shot *s = new Shot(weapon.damage);
+			Shot *s = new Shot(weapon.damage, weapon.shotPrice > 0);
 			s->maxDistance = weapon.maxDistance + (rand() % static_cast<int>(weapon.maxDistance/10));
 			s->setTexture(Shot::dRight, g.textures[weapon.name + "shot"], weapon.ShotRight, weapon.ShotRightCount);
 			s->setTexture(Shot::dLeft, g.textures[weapon.name + "shot"], weapon.ShotLeft, weapon.ShotLeftCount);

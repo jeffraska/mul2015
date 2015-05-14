@@ -3,10 +3,11 @@
 #include <iostream>
 #include <cmath>
 
-Shot::Shot(int dmg) {
+Shot::Shot(int dmg, bool hitEnemy) {
 	refreshRate = sf::milliseconds(75);
 
 	damage = dmg;
+	this->hitEnemy = hitEnemy;
 }
 
 void Shot::init(sf::Time frameTime, float speed) {
@@ -80,48 +81,76 @@ void Shot::animate(sf::Time deltaTime) {
 
 	vector<Enemy>::iterator i;
 
-	for (i = g.enemies.begin(); i != g.enemies.end(); ++i)
+	if (hitEnemy)
 	{
-		if (hitTest(*i))
+		for (i = g.enemies.begin(); i != g.enemies.end(); ++i)
 		{
-			char scoreStr[10];
-
-			i->lives -= damage;
-			g.dollars += damage;
-
-			// new dollars text
-			sf::Text dollars;
-			dollars.setFont(g.fonts["Jose"]);
-			sprintf_s(scoreStr, 10, "%d", damage);
-			dollars.setString(scoreStr);
-			dollars.setColor(sf::Color::Black);
-			sf::Vector2f offset;
-			offset.x = i->sprite.getAnimation()->getFrame(0).width / 2;
-			offset.y = -60;
-			dollars.setPosition(i->getPosition() + offset);
-			dollars.setCharacterSize(72);
-
-			g.dollarsTexts.push_back(dollars);
-
-			if (i->lives <= 0)
+			if (hitTest(*i))
 			{
-				i->holdFire();
-				i->stop();
+				char scoreStr[10];
 
-				// show explosion
-				AnimatedSprite as;
-				as.setPosition(
-					i->getPosition().x + ((i->sprite.getAnimation()->getFrame(0).width - g.explosionAnimation.getFrame(0).width) / 2),
-					i->getPosition().y + ((i->sprite.getAnimation()->getFrame(0).height - g.explosionAnimation.getFrame(0).height) / 2)
-				);
-				as.setAnimation(g.explosionAnimation);
-				as.setLooped(false);
-				as.setFrameTime(sf::milliseconds(75));
-				as.play();
-				g.explosions.push_back(as);
+				i->lives -= damage;
+				g.dollars += damage;
 
-				g.explosionSound.play();
-				g.enemies.erase(i);
+				// new dollars text
+				/*sf::Text dollars;
+				dollars.setFont(g.fonts["Jose"]);
+				sprintf_s(scoreStr, 10, "%d", damage);
+				dollars.setString(scoreStr);
+				dollars.setColor(sf::Color::Black);
+				sf::Vector2f offset;
+				offset.x = i->sprite.getAnimation()->getFrame(0).width / 2;
+				offset.y = -60;
+				dollars.setPosition(i->getPosition() + offset);
+				dollars.setCharacterSize(72);
+
+				g.dollarsTexts.push_back(dollars);*/
+
+				if (i->lives <= 0)
+				{
+					i->holdFire();
+					i->stop();
+
+					// show explosion
+					AnimatedSprite as;
+					as.setPosition(
+						i->getPosition().x + ((i->sprite.getAnimation()->getFrame(0).width - g.explosionAnimation.getFrame(0).width) / 2),
+						i->getPosition().y + ((i->sprite.getAnimation()->getFrame(0).height - g.explosionAnimation.getFrame(0).height) / 2)
+					);
+					as.setAnimation(g.explosionAnimation);
+					as.setLooped(false);
+					as.setFrameTime(sf::milliseconds(75));
+					as.play();
+					g.explosions.push_back(as);
+
+					g.explosionSound.play();
+					g.enemies.erase(i);
+				}
+
+				destroyShot();
+				return;
+			}
+		}
+	}
+	else
+	{
+		if (hitTest(g.player))
+		{
+			g.player.lives -= damage;
+
+			if (g.player.lives <= 0)
+			{
+				g.gameOver = true;
+				g.player.stop();
+				g.player.holdFire();
+
+				g.deathSound.play();
+
+				for (i = g.enemies.begin(); i != g.enemies.end(); ++i)
+				{
+					i->holdFire();
+					i->stop();
+				}
 			}
 
 			destroyShot();

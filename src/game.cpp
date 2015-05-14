@@ -23,12 +23,15 @@ game::game() {
 }
 
 game::~game() {
-	for (int i = 0; i < music.size(); i++)
+	while (music.size() > 0)
 	{
 		music.begin()->second->stop();
 		delete music.begin()->second;
 		music.erase(music.begin());
 	}
+
+	explosionSound.stop();
+	deathSound.stop();
 }
 
 void game::init() {
@@ -125,7 +128,7 @@ void game::init() {
 		1,									// number of shot right sprites
 		sf::IntRect(0, 34, 27, 34),			// shot left sprite coordinates
 		1,									// number of shot left sprites
-		25,									// speed of shot
+		15,									// speed of shot
 		0,									// shot price in $
 		sf::milliseconds(2000),				// shot rate
 		2000,								// max shot distance,
@@ -139,6 +142,7 @@ void game::init() {
 	tankTemplate.weapon = weapons["tankcanon"];
 
 	explosionSound.setBuffer(sounds["explosion"]);
+	deathSound.setBuffer(sounds["death"]);
 }
 
 void game::newEnemy(float x, float y)

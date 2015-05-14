@@ -11,7 +11,7 @@ public:
 		dRight
 	};
 
-	Shot(int);
+	Shot(int, bool);
 	void init(sf::Time frameTime = sf::seconds(0.2f), float speed = 15);
 	void setTexture(Direction, const sf::Texture& texture, sf::IntRect, int);
 	void go(Direction);
@@ -41,6 +41,7 @@ private:
 	float totalDistance;
 
 	int damage;
+	bool hitEnemy;
 };
 
 #endif	/* CHARACTER_H */

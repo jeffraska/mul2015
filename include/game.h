@@ -48,6 +48,8 @@ public:
 	Enemy tankTemplate;
 	Animation explosionAnimation;
 	sf::Sound explosionSound;
+	sf::Sound deathSound;
+	bool gameOver;
 private:
 	game();
 	~game();

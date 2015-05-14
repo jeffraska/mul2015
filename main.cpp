@@ -48,11 +48,13 @@ void renderThread() {
 
 		if (g.player.getCenter().x > gameView.getCenter().x + gameView.getSize().x / 4){
 			gameView.move(gameView.getSize().x / 2, 0);
-			g.newEnemy(gameView.getCenter().x + gameView.getSize().x / 2, 500);
+			g.newEnemy(gameView.getCenter().x + gameView.getSize().x / 2, 625);
 		}
 
-		if (g.player.getCenter().x < gameView.getCenter().x - gameView.getSize().x / 4){
-			gameView.move(gameView.getSize().x / -2, 0);
+		if (g.player.getCenter().x < gameView.getCenter().x - gameView.getSize().x / 2){
+			g.player.stop();
+			stepSound.setLoop(false);
+			//gameView.move(gameView.getSize().x / -2, 0);
 		}
 
 		for (auto i = 0; i < g.enemies.size(); i++)
@@ -97,7 +99,7 @@ void renderThread() {
 		}
 
 		// animate dolars texts
-		dollarsTextsTime += frameTime;
+		/*dollarsTextsTime += frameTime;
 		if (dollarsTextsTime.asMilliseconds() > 20)
 		{
 			dollarsTextsTime = sf::microseconds(dollarsTextsTime.asMicroseconds() % frameTime.asMicroseconds());
@@ -109,10 +111,15 @@ void renderThread() {
 				sf::Color c = i->getColor();
 				c.a -= 15;	// 255 musí mýt dìlitelné tímto èíslem
 				i->setColor(c);
+			}
+
+			for (vector<sf::Text>::iterator i = g.dollarsTexts.begin(); i != g.dollarsTexts.end(); ++i)
+			{
+				sf::Color c = i->getColor();
 				if (c.a == 0)
 				{
 					g.dollarsTexts.erase(i);
-					--i;
+					i = g.dollarsTexts.begin();
 				}
 			}
 		}
@@ -121,13 +128,24 @@ void renderThread() {
 		for (int i = 0; i < g.dollarsTexts.size(); i++)
 		{
 			window.draw(g.dollarsTexts[i]);
-		}
+		}*/
 
 		// render explosions
 		for (vector<AnimatedSprite>::iterator i = g.explosions.begin(); i != g.explosions.end(); ++i)
 		{
 			i->update(frameTime);
 			window.draw(*i);
+		}
+
+		if (g.gameOver)
+		{
+			sf::Text go;
+			go.setFont(g.fonts["Jose"]);
+			go.setString("Game over");
+			go.setCharacterSize(72);
+			go.setPosition(gameView.getCenter().x - go.getLocalBounds().width/2, gameView.getCenter().y + go.getLocalBounds().height/2);
+			go.setColor(sf::Color::Black);
+			window.draw(go);
 		}
 
 		// Draw GUI
@@ -162,26 +180,11 @@ void renderThread() {
 	cout << "Rendering thread stop" << endl;
 }
 
-int main(int argc, char** argv) {
-	// create window
-	window.create(sf::VideoMode::getDesktopMode(), "MUL 2015"/*, sf::Style::Fullscreen*/);
-	window.setVerticalSyncEnabled(true);
-	window.setKeyRepeatEnabled(false);
-	window.setActive(false);
+void initGame()
+{
 	game &g = game::getInstance();
-	
-
-	//sf::Sound shotSound;
-	sf::Sound stepSound;
-	sf::Sound explosionSound;
-	sf::Sound gunloadSound;
-
-	// create rendering thread
-	sf::Thread renderThread(&renderThread);
-	renderThread.launch();
-
 	// init character sprites
-	g.player.init(sf::milliseconds(10), 10);
+	g.player.init(sf::milliseconds(10), 10, 500);
 	g.tankTemplate.init(sf::milliseconds(10), 5, 1000);
 	
 
@@ -192,10 +195,7 @@ int main(int argc, char** argv) {
 		);
 
 	g.tankTemplate.go(Character::dLeft);
-	//g.tankTemplate.stop();
 	g.tankTemplate.fire();
-
-	g.newEnemy(1500, 500);
 
 	// prepare sounds
 	stepSound.setBuffer(g.sounds["step"]);
@@ -205,6 +205,21 @@ int main(int argc, char** argv) {
 	// play background sounds
 	g.music.at("horor")->play();
 	g.music.at("drums")->play();
+}
+
+int main(int argc, char** argv) {
+	// create window
+	window.create(sf::VideoMode::getDesktopMode(), "MUL 2015"/*, sf::Style::Fullscreen*/);
+	window.setVerticalSyncEnabled(true);
+	window.setKeyRepeatEnabled(false);
+	window.setActive(false);
+	game &g = game::getInstance();
+
+	// create rendering thread
+	sf::Thread renderThread(&renderThread);
+	renderThread.launch();
+
+	initGame();
 
 	// main loop
 	sf::Event event;
@@ -227,99 +242,102 @@ int main(int argc, char** argv) {
 					window.close();
 					break;
 				}
-				if (event.key.code == sf::Keyboard::Right) {
-					/*window.setKeyRepeatEnabled(true);
-					if (stepSound.getLoop() != true){*/
+				if (!g.gameOver)
+				{
+					if (event.key.code == sf::Keyboard::Right) {
+						/*window.setKeyRepeatEnabled(true);
+						if (stepSound.getLoop() != true){*/
 						g.player.go(Character::dRight);
 						stepSound.setLoop(true);
 						stepSound.play();
-					/*}
-					
-					if (g.player.getPosition().x > endPos-300){
+						/*}
+
+						if (g.player.getPosition().x > endPos-300){
 						gameView.move(500, 0);
 						endPos += 500;
 						startPos += 500;
 						cout << endl << startPos << endl << endPos << endl;
-					}
+						}
 
-					collision = g.groundCollision(g.player.getPosition(), 1);
-					switch (collision){
-					case 1: //ground
+						collision = g.groundCollision(g.player.getPosition(), 1);
+						switch (collision){
+						case 1: //ground
 						break;
-					case 2: //barrier
+						case 2: //barrier
 						if (g.barrier){
-							g.player.stop();
-							stepSound.setLoop(false);
-							window.setKeyRepeatEnabled(false);
-							break;
+						g.player.stop();
+						stepSound.setLoop(false);
+						window.setKeyRepeatEnabled(false);
+						break;
 						}
-					case 3: //fire
+						case 3: //fire
 						if (g.barrier == true){
-							g.player.lives--;
+						g.player.lives--;
 						}
 						break;
-					case 4://flower
+						case 4://flower
 						if (g.barrier == true){
-							//nejakej zvuk
+						//nejakej zvuk
 						}
 						break;*/
-					/*default://dira
+						/*default://dira
 						g.player.setPosition(g.player.getPosition().x, collision);
 						break;
-					}*/
-				}
-				if (event.key.code == sf::Keyboard::Left) {
-					/*window.setKeyRepeatEnabled(true);
-					if (stepSound.getLoop() != true){*/
+						}*/
+					}
+					if (event.key.code == sf::Keyboard::Left) {
+						/*window.setKeyRepeatEnabled(true);
+						if (stepSound.getLoop() != true){*/
 						g.player.go(Character::dLeft);
 						stepSound.setLoop(true);
 						stepSound.play();
-					/*}
+						/*}
 
-					if (g.player.getPosition().x < startPos+300){
+						if (g.player.getPosition().x < startPos+300){
 						gameView.move(500*-1, 0);
 						endPos -= 500;
 						startPos -= 500;
-					}
+						}
 
-					collision = g.groundCollision(g.player.getPosition(), -1);
-					switch (collision){
-					case 1: //rovina
+						collision = g.groundCollision(g.player.getPosition(), -1);
+						switch (collision){
+						case 1: //rovina
 						break;
-					case 2: //prekazka
+						case 2: //prekazka
 						if (g.barrier){
-							//g.player.stop();
-							//stepSound.setLoop(false);
-							//window.setKeyRepeatEnabled(false);
-							break;
+						//g.player.stop();
+						//stepSound.setLoop(false);
+						//window.setKeyRepeatEnabled(false);
+						break;
 						}
-					case 3: //fire
+						case 3: //fire
 						if (g.barrier == true){
-							g.player.lives--;
+						g.player.lives--;
 						}
 						break;
-					case 4://flower
+						case 4://flower
 						if (g.barrier == true){
-							//nejakej zvuk
+						//nejakej zvuk
 						}
 						break;
-					}*/
-				}
-				if (event.key.code == sf::Keyboard::LControl) {
-					g.player.fire();
-				}
-				if (event.key.code == sf::Keyboard::Space ||
-					event.key.code == sf::Keyboard::Up)
-				{
-					g.player.jump();
-				}
-				if (event.key.code == sf::Keyboard::F1) {
-					g.player.setWeapon(g.weapons["machinegun"]);
-					gunloadSound.play();
-				}
-				if (event.key.code == sf::Keyboard::F2) {
-					g.player.setWeapon(g.weapons["laser"]);
-					gunloadSound.play();
+						}*/
+					}
+					if (event.key.code == sf::Keyboard::LControl) {
+						g.player.fire();
+					}
+					if (event.key.code == sf::Keyboard::Space ||
+						event.key.code == sf::Keyboard::Up)
+					{
+						g.player.jump();
+					}
+					if (event.key.code == sf::Keyboard::F1) {
+						g.player.setWeapon(g.weapons["machinegun"]);
+						gunloadSound.play();
+					}
+					if (event.key.code == sf::Keyboard::F2) {
+						g.player.setWeapon(g.weapons["laser"]);
+						gunloadSound.play();
+					}
 				}
 				break;
 			case sf::Event::KeyReleased:
@@ -400,6 +418,9 @@ int main(int argc, char** argv) {
 			}
 		}
 	}
+
+	gunloadSound.stop();
+	stepSound.stop();
 
 	// wait to terminate render thread
 	renderThread.wait();
