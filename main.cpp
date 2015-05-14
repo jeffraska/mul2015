@@ -13,49 +13,13 @@ void renderThread() {
 	game &g = game::getInstance();
 
 	sf::Text score;
-	
-
-	/*vector<int> terrain;
-	terrain.push_back(0);
-
-	srand(time(NULL));
-	for (int i = 0; i < 10; i++)
-	{
-	int random = rand() % 100 - 50;
-	if (random > 30)
-	terrain.push_back(terrain[i] + 1);
-	else if (random < -30)
-	terrain.push_back(terrain[i] - 1);
-	else
-	terrain.push_back(terrain[i]);
-	}*/
-
-	/*sf::Shader shader;
-	if (sf::Shader::isAvailable())
-	{
-	const string fragmentShader = "uniform sampler2D texture; void main() { vec4 ref = texture2D(texture, gl_TexCoord[0].xy) * gl_Color; gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0) - ref; gl_FragColor.a = ref.a;	}";
-	shader.loadFromMemory(fragmentShader, sf::Shader::Fragment);
-	shader.setParameter("texture", sf::Shader::CurrentTexture);
-	}*/
-
-	/*ParticleSystem fire(window.getSize());
-	//fire.setPosition(500, 500);
-	fire.setGravity(0, -7);
-	fire.setParticleSpeed(25);
-	fire.fuel(200);
-	fire.setDissolutionRate(4);
-
-	fire.setDistribution();
-	fire.setDissolve();*/
 
 	sf::Time interestRateTime;
 	sf::Time dollarsTextsTime;
-	//sf::Time a;
 
 	// scrolling map view
 	gameView = window.getView();
 	fixedView = window.getView();
-	//gameView.move(-500, 0);
 	window.setView(gameView);
 
 	// GUI
@@ -81,7 +45,16 @@ void renderThread() {
 
 		// animate
 		g.player.animate(frameTime, ground);
-		//fire.update(static_cast<float>(20) / 1000);
+
+		if (g.player.getCenter().x > gameView.getCenter().x + gameView.getSize().x / 4){
+			gameView.move(gameView.getSize().x / 2, 0);
+			g.newEnemy(gameView.getCenter().x + gameView.getSize().x / 2, 500);
+		}
+
+		if (g.player.getCenter().x < gameView.getCenter().x - gameView.getSize().x / 4){
+			gameView.move(gameView.getSize().x / -2, 0);
+		}
+
 		for (auto i = 0; i < g.enemies.size(); i++)
 		{
 			g.enemies[i].animate(frameTime, ground);
@@ -93,49 +66,6 @@ void renderThread() {
 
 		// draw
 		window.clear(sf::Color::White);
-
-		// Zvyšování úrokù
-		/*interestRateTime += frameTime;
-		if (interestRateTime.asSeconds() > 1)
-		{
-			interestRateTime = sf::microseconds(interestRateTime.asMicroseconds() % frameTime.asMicroseconds());
-
-			if (g.dollars > 0)
-			{
-				g.dollars += static_cast<float>(g.dollars) * 0.01;	// úrok 1% na bìžném úètu
-			} else if (g.dollars < 0)
-			{
-				g.dollars += static_cast<float>(g.dollars) * 0.1;	// úrok 10% pøi dluhu
-			}
-		}*/
-
-		/*a += frameTime;
-		if (a.asMilliseconds() > 50)
-		{
-			a = sf::microseconds(a.asMicroseconds() % frameTime.asMicroseconds());
-			fire.fuel(200);
-		}*/
-
-		//fire.setPosition(g.player.getPosition() + sf::Vector2f(100, 50));
-
-		/*for (int i = 0; i < terrain.size() - 1; i++)
-		{
-		//sf::RectangleShape line(sf::Vector2f()
-		int w = 100;
-		int h = 50;
-		sf::Vertex line[] = {
-		sf::Vertex(sf::Vector2f(i * w, terrain[i] * h + window.getSize().y / 2 + 125), sf::Color::Black),
-		sf::Vertex(sf::Vector2f((i + 1) * w, terrain[i + 1] * h + window.getSize().y / 2 + 125), sf::Color::Black)
-		};
-
-		window.draw(line, 2, sf::Lines);
-		}*/
-
-		/*
-			Vykreslit pozadí
-			*/
-
-		//window.draw(fire);
 
 		// Draw enemies
 		for (int i = 0; i < g.enemies.size(); i++)
@@ -256,20 +186,16 @@ int main(int argc, char** argv) {
 	
 
 	g.player.setPosition(
-		50,
-		//sf::VideoMode::getDesktopMode().width / 2 - 100,
+		//50,
+		sf::VideoMode::getDesktopMode().width / 2 - 100,
 		sf::VideoMode::getDesktopMode().height / 2 - 125
 		);
 
 	g.tankTemplate.go(Character::dLeft);
 	//g.tankTemplate.stop();
-	//g.tankTemplate.fire();
+	g.tankTemplate.fire();
 
 	g.newEnemy(1500, 500);
-	g.newEnemy(3500, 500);
-	g.newEnemy(4000, 500);
-	
-	
 
 	// prepare sounds
 	stepSound.setBuffer(g.sounds["step"]);
@@ -286,7 +212,7 @@ int main(int argc, char** argv) {
 	float endPos = (window.getSize().x);
 	float startPos = 0.;
 	int collision = 0;
-
+	
 	while (window.isOpen()) {
 		if (window.waitEvent(event)) {
 			switch (event.type) {
@@ -302,17 +228,18 @@ int main(int argc, char** argv) {
 					break;
 				}
 				if (event.key.code == sf::Keyboard::Right) {
-					window.setKeyRepeatEnabled(true);
-					if (stepSound.getLoop() != true){
+					/*window.setKeyRepeatEnabled(true);
+					if (stepSound.getLoop() != true){*/
 						g.player.go(Character::dRight);
 						stepSound.setLoop(true);
 						stepSound.play();
-					}
+					/*}
 					
 					if (g.player.getPosition().x > endPos-300){
 						gameView.move(500, 0);
 						endPos += 500;
 						startPos += 500;
+						cout << endl << startPos << endl << endPos << endl;
 					}
 
 					collision = g.groundCollision(g.player.getPosition(), 1);
@@ -335,19 +262,19 @@ int main(int argc, char** argv) {
 						if (g.barrier == true){
 							//nejakej zvuk
 						}
-						break;
+						break;*/
 					/*default://dira
 						g.player.setPosition(g.player.getPosition().x, collision);
-						break;*/
-					}
+						break;
+					}*/
 				}
 				if (event.key.code == sf::Keyboard::Left) {
-					window.setKeyRepeatEnabled(true);
-					if (stepSound.getLoop() != true){
+					/*window.setKeyRepeatEnabled(true);
+					if (stepSound.getLoop() != true){*/
 						g.player.go(Character::dLeft);
 						stepSound.setLoop(true);
 						stepSound.play();
-					}
+					/*}
 
 					if (g.player.getPosition().x < startPos+300){
 						gameView.move(500*-1, 0);
@@ -361,9 +288,9 @@ int main(int argc, char** argv) {
 						break;
 					case 2: //prekazka
 						if (g.barrier){
-							g.player.stop();
-							stepSound.setLoop(false);
-							window.setKeyRepeatEnabled(false);
+							//g.player.stop();
+							//stepSound.setLoop(false);
+							//window.setKeyRepeatEnabled(false);
 							break;
 						}
 					case 3: //fire
@@ -376,7 +303,7 @@ int main(int argc, char** argv) {
 							//nejakej zvuk
 						}
 						break;
-					}
+					}*/
 				}
 				if (event.key.code == sf::Keyboard::LControl) {
 					g.player.fire();
@@ -401,7 +328,7 @@ int main(int argc, char** argv) {
 					g.player.stop();
 					stepSound.setLoop(false);
 
-					if (g.player.getPosition().x > endPos - 300){
+					/*if (g.player.getPosition().x > endPos - 300){
 						gameView.move(500, 0);
 						endPos += 500;
 						startPos += 500;
@@ -429,14 +356,14 @@ int main(int argc, char** argv) {
 						}
 						break;
 					}
-					window.setKeyRepeatEnabled(false);
+					window.setKeyRepeatEnabled(false);*/
 				}
 				if (event.key.code == sf::Keyboard::Left &&
 					g.player.getDirection() == Character::dLeft) {
 					g.player.stop();
 					stepSound.setLoop(false);
 
-					if (g.player.getPosition().x < startPos + 300){
+					/*if (g.player.getPosition().x < startPos + 300){
 						gameView.move(500 * -1, 0);
 						endPos -= 500;
 						startPos -= 500;
@@ -464,7 +391,7 @@ int main(int argc, char** argv) {
 						}
 						break;
 					}
-					window.setKeyRepeatEnabled(false);
+					window.setKeyRepeatEnabled(false);*/
 				}
 				if (event.key.code == sf::Keyboard::LControl) {
 					g.player.holdFire();

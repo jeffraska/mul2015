@@ -50,6 +50,7 @@ public:
 	void setPosition(float x, float y);
 	void setPosition(const sf::Vector2f&);
 	sf::Vector2f getPosition();
+	sf::Vector2f getCenter();
 	void animate(sf::Time t, float groundY);
 
 	Direction getDirection() {

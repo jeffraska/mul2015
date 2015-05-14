@@ -178,6 +178,13 @@ sf::Vector2f Character::getPosition() {
 	return position;
 }
 
+sf::Vector2f Character::getCenter()
+{
+	float x = position.x + sprite.getAnimation()->getFrame(0).width / 2;
+	float y = position.y + sprite.getAnimation()->getFrame(0).height / 2;
+	return sf::Vector2f(x, y);
+}
+
 void Character::animate(sf::Time deltaTime, float groundY) {
 	if (wStatus == wWalk) {
 		m_currentTime += deltaTime;
@@ -239,7 +246,7 @@ void Character::animate(sf::Time deltaTime, float groundY) {
 
 				newY -= 25*sin(jumpProgress * M_PI / 180);
 
-				if (jumpProgress >= 150)	// end of jump on plane
+				if (jumpProgress >= 90)	// end of jump on plane
 				{
 					jumpProgress = 0;
 					jStatus = jFall;

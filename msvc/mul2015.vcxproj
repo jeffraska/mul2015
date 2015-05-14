@@ -106,6 +106,7 @@
     <ClCompile Include="..\src\Animation.cpp" />
     <ClCompile Include="..\src\Character.cpp" />
     <ClCompile Include="..\src\game.cpp" />
+    <ClCompile Include="..\src\GroundPanel.cpp" />
     <ClCompile Include="..\src\Particle.cpp" />
     <ClCompile Include="..\src\Shot.cpp" />
     <ClCompile Include="..\src\Weapon.cpp" />
