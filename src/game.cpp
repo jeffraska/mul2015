@@ -168,35 +168,34 @@ void game::genGround(sf::Vector2u windowSize, int direction){
 	}
 	return ground.at(ground.size()-1);*/
 
-	int j = windowSize.x / 300;
-	j++;
+	int j = 100;
 	int genTexType;
+	int lives;
 	sf::Vector2f lastPosition;
 
 
 	for (int i = 0; i < j; i++){
 		GroundPanel panel;
+		lives = 0;
 		genTexType = randomGenerator();
+
+		if (genTexType == 5){
+			lives = 5;
+		}
 
 		if (i == 0){
 			if (ground.size() == 0){
 				lastPosition.x = 0;
 				lastPosition.y = 740;
-				panel.init(lastPosition, genTexType);
-			}
-			else if (direction == -1){
-				lastPosition = ground.at(0).getPosition();
-				ground.clear();
-				panel.init(sf::Vector2f(lastPosition.x , lastPosition.y), genTexType);
+				panel.init(lastPosition, genTexType, lives);
 			}
 			else {
 				lastPosition = ground.at(ground.size() - 1).getPosition();
-				ground.clear();
-				panel.init(sf::Vector2f(lastPosition.x, lastPosition.y), genTexType);
+				panel.init(lastPosition, genTexType, lives);
 			}
 		}
 		else {
-			panel.init(sf::Vector2f(lastPosition.x + (direction *300), lastPosition.y), genTexType);
+			panel.init(sf::Vector2f(lastPosition.x + 300, lastPosition.y), genTexType, lives);
 		}
 		
 		panel.sprite.setTexture(textures["ground" + panel.getSType()]);
@@ -209,16 +208,16 @@ void game::genGround(sf::Vector2u windowSize, int direction){
 int game::randomGenerator(){
 	double val = (double)rand() / RAND_MAX;
 
-	if (val < 0.6)       //  floor 60%
+	if (val < 0.71)       //  floor 71%
 		return 3;
-	else if (val < 0.7)  //  10%
+	else if (val < 0.79)  //  8%
 		return 1;
-	else if (val < 0.8)  //  10%
+	else if (val < 0.87)  //  8%
 		return 2;
-	else if (val < 0.9)  //  10%
+	else if (val < 0.95)  //  8%
 		return 4;
 	else
-		return 5;  //  10%
+		return 5;  //  5%
 }
 
 void createGround(){
@@ -238,54 +237,64 @@ int game::groundCollision(sf::Vector2f playerPosition, int direction){
 		}
 		return 1; //rovina
 	}*/
-	GroundPanel panel;
+	int j = 0;;
 
 	for (int i = 0; i < ground.size()-1; i++){
 		if (direction == 1){
 			if (playerPosition.x + player.sprite.getAnimation()->getFrame(0).width > ground[i].getPosition().x  &&
 				playerPosition.x + player.sprite.getAnimation()->getFrame(0).width < ground[i + 1].getPosition().x){
-				panel = ground[i];
+				j = i;
 			}
 			else if (i == (ground.size() - 2)){
-				panel = ground[i + 1];
+				j = i + 1;
 			}
 		}
 		else {
 			if (playerPosition.x + player.sprite.getAnimation()->getFrame(0).width > ground[i].getPosition().x  &&
 				playerPosition.x < ground[i + 1].getPosition().x){
-				panel = ground[i];
+				j = i;
 			}
 			else if (i == (ground.size() - 2)){
-				panel = ground[i + 1];
+				j =i + 1;
 			}
 		}
 		
-
-		switch (panel.getType()) {
-		case 1: //barrier
-		case 2: //barrier
-			if ((playerPosition.y + player.sprite.getAnimation()->getFrame(0).height) == (panel.getPosition().y + 60))
-				barrier = true;
-			else
+		if (j != 0) {
+			switch (ground[j].getType()) {
+			case 1: //barrier
+			case 2: //barrier
+				if ((playerPosition.y + player.sprite.getAnimation()->getFrame(0).height) == (ground[j].getPosition().y + 60))
+					barrier = true;
+				else
+					barrier = false;
+				///DODELAT ZATARAS
+				return 2;
+			case 3: //ground
 				barrier = false;
-			///DODELAT ZATARAS
-			return 2;
-		case 3: //ground
-			barrier = false;
-			return 1;
-		case 4: //fire
-			if ((playerPosition.y + player.sprite.getAnimation()->getFrame(0).height) == (panel.getPosition().y + 60))
-				barrier = true;
-			else 
-				barrier = false;
-			return 3;
-		case 5: //flower
-			if ((playerPosition.y + player.sprite.getAnimation()->getFrame(0).height) == (panel.getPosition().y + 60))
-				barrier = true;
-			else
-				barrier = false;
-			return 4;
+				return 1;
+			case 4: //fire
+				if ((playerPosition.y + player.sprite.getAnimation()->getFrame(0).height) == (ground[j].getPosition().y + 60))
+					barrier = true;
+				else
+					barrier = false;
+				return 3;
+			case 5: //flower
+				if ((playerPosition.y + player.sprite.getAnimation()->getFrame(0).height) == (ground[j].getPosition().y + 60)){
+					barrier = true;
+					if (ground[j].getLives() != 0){
+						player.lives++;
+						ground[j].lives--;
+					}
+					if (ground[j].getLives() == 0) {
+						ground[j].sprite.setTexture(textures["ground3"]);
+					}
+				}
+				else
+					barrier = false;
+				return 4;
+			}
 		}
+		
 	}
 }
 

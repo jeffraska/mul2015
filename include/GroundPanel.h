@@ -17,13 +17,15 @@ public:
 	sf::Vector2f position;
 	sf::Vector2i size;
 	int type;
+	int lives;
 	sf::Sprite sprite;
 	std::string sType;
 
 	sf::Vector2f getPosition();
 	sf::Vector2i getSize();
 	int getType();
-	void init(sf::Vector2f, int);
+	int getLives();
+	void init(sf::Vector2f, int, int);
 	std::string getSType();
 
 private:

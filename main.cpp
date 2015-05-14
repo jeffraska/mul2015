@@ -309,22 +309,17 @@ int main(int argc, char** argv) {
 						stepSound.play();
 					}
 					
-					if (g.player.getPosition().x > endPos){
-						gameView.move((window.getSize().x), 0);
-						startPos = endPos;
-						endPos = g.player.getPosition().x + window.getSize().x;
-						g.genGround(window.getSize(), 1);
-
-						for (int k = 0; k < g.ground.size(); k++){
-							window.draw(g.ground.at(k).sprite);
-						}
+					if (g.player.getPosition().x > endPos-300){
+						gameView.move(500, 0);
+						endPos += 500;
+						startPos += 500;
 					}
 
 					collision = g.groundCollision(g.player.getPosition(), 1);
 					switch (collision){
-					case 1: //rovina
+					case 1: //ground
 						break;
-					case 2: //prekazka
+					case 2: //barrier
 						if (g.barrier){
 							g.player.stop();
 							stepSound.setLoop(false);
@@ -334,6 +329,11 @@ int main(int argc, char** argv) {
 					case 3: //fire
 						if (g.barrier == true){
 							g.player.lives--;
+						}
+						break;
+					case 4://flower
+						if (g.barrier == true){
+							//nejakej zvuk
 						}
 						break;
 					/*default://dira
@@ -349,16 +349,10 @@ int main(int argc, char** argv) {
 						stepSound.play();
 					}
 
-					if (g.player.getPosition().x < startPos){
-						int offset = window.getSize().x;
-						gameView.move(offset*-1, 0);
-						endPos = startPos;
-						startPos = g.player.getPosition().x - window.getSize().x;
-						g.genGround(window.getSize(), -1);
-
-						for (int k = 0; k < g.ground.size(); k++){
-							window.draw(g.ground.at(k).sprite);
-						}
+					if (g.player.getPosition().x < startPos+300){
+						gameView.move(500*-1, 0);
+						endPos -= 500;
+						startPos -= 500;
 					}
 
 					collision = g.groundCollision(g.player.getPosition(), -1);
@@ -375,6 +369,11 @@ int main(int argc, char** argv) {
 					case 3: //fire
 						if (g.barrier == true){
 							g.player.lives--;
+						}
+						break;
+					case 4://flower
+						if (g.barrier == true){
+							//nejakej zvuk
 						}
 						break;
 					}
@@ -402,6 +401,12 @@ int main(int argc, char** argv) {
 					g.player.stop();
 					stepSound.setLoop(false);
 
+					if (g.player.getPosition().x > endPos - 300){
+						gameView.move(500, 0);
+						endPos += 500;
+						startPos += 500;
+					}
+
 					collision = g.groundCollision(g.player.getPosition(),1);
 					switch (collision){
 					case 1: //rovina
@@ -418,6 +423,11 @@ int main(int argc, char** argv) {
 							g.player.lives--;
 						}
 						break;
+					case 4://flower
+						if (g.barrier == true){
+							//nejakej zvuk
+						}
+						break;
 					}
 					window.setKeyRepeatEnabled(false);
 				}
@@ -425,6 +435,12 @@ int main(int argc, char** argv) {
 					g.player.getDirection() == Character::dLeft) {
 					g.player.stop();
 					stepSound.setLoop(false);
+
+					if (g.player.getPosition().x < startPos + 300){
+						gameView.move(500 * -1, 0);
+						endPos -= 500;
+						startPos -= 500;
+					}
 
 					collision = g.groundCollision(g.player.getPosition(), -1);
 					switch (collision){
@@ -444,7 +460,7 @@ int main(int argc, char** argv) {
 						break;
 					case 4: // flower
 						if (g.barrier == true){
-							g.player.lives++;
+							//nejakej zvuk
 						}
 						break;
 					}

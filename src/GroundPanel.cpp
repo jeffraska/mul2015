@@ -6,10 +6,11 @@ GroundPanel::GroundPanel(){
 	//refreshRate = sf::milliseconds(75);
 }
 
-void GroundPanel::init(sf::Vector2f pos, int type_){
+void GroundPanel::init(sf::Vector2f pos, int type_, int lives_){
 	position = pos;
 	size = sf::Vector2i(300, 120);
 	type = type_;
+	lives = lives_;
 	sType = std::to_string(type_);
 }
 
@@ -27,6 +28,10 @@ int GroundPanel::getType(){
 
 std::string GroundPanel::getSType(){
 	return sType;
+}
+
+int GroundPanel::getLives(){
+	return lives;
 }
 
 GroundPanel::~GroundPanel()
